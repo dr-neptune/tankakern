@@ -1,0 +1,11 @@
+* <2025-03-04 Tue>
+
+Goals with this app:
+- keep it simple, use the most highly supported tools
+- ts frontend
+  - use a message broker to hit different workers
+  - have R and python workers that handle heavy dependencies
+  - keep each set of dependencies in a nix env
+
+Start small. Let's begin with just a ui that allows the user to upload
+a document and have it get turned into docling markdown.

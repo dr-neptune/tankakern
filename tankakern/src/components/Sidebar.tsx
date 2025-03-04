@@ -1,0 +1,112 @@
+import Link from "next/link";
+
+export default function Sidebar() {
+  return (
+    <aside className="menu w-64 p-4 bg-base-100 text-base-content">
+      <div className="mb-4">
+        <Link href="/">
+          <button className="btn btn-ghost text-pink-500 hover:text-pink-600 flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 9.75L12 3l9 6.75V21a1.5 1.5 0 01-1.5 1.5H4.5A1.5 1.5 0 013 21V9.75z"
+              />
+            </svg>
+            Home
+          </button>
+        </Link>
+      </div>
+      <ul>
+        <li>
+          <Link href="/data-extraction" className="flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M7 8h10M7 12h10m-6 4h6"
+              />
+            </svg>
+            Data Extraction
+          </Link>
+        </li>
+        <li>
+          <Link href="/performance" className="flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 10h4v10H3zM9 6h4v14H9zM15 14h4v6h-4z"
+              />
+            </svg>
+            Performance
+          </Link>
+        </li>
+        <li>
+          <Link href="/track-record" className="flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 8v4l3 3"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 3a9 9 0 110 18 9 9 0 010-18z"
+              />
+            </svg>
+            Track Record
+          </Link>
+        </li>
+        <li>
+          <Link href="/relationships" className="flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M17 20h5v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2h5M12 12a4 4 0 110-8 4 4 0 010 8z"
+              />
+            </svg>
+            Relationships
+          </Link>
+        </li>
+      </ul>
+    </aside>
+  );
+}
