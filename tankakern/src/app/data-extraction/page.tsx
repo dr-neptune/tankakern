@@ -52,6 +52,10 @@ export default function DataExtractionPage() {
         Welcome to the Data Extraction tool. Here, you can upload a PDF file and specify what information you need extracted from it.
         This tool is designed to help you quickly extract the relevant data from your documents.
       </p>
+      <p className="mb-8 text-lg text-blue-600">
+        Note: The app will return the most likely answers to your question with the key context highlighted.
+        For best results, please ensure that the answer exists and is short (e.g. a number or a name).
+      </p>
       <form onSubmit={handleSubmit} className="space-y-6 bg-base-200 p-6 rounded-lg shadow">
         <div>
           <label htmlFor="pdf-upload" className="block text-sm font-medium text-gray-700">
