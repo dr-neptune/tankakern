@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 from datetime import datetime, timedelta
 import random
-from backend.data_extraction import router as data_extraction_router
+from data_extraction import router as data_extraction_router
 
 app = FastAPI()
+app.include_router(data_extraction_router, prefix="/data-extraction")
 
 @app.get("/timeseries")
 def get_timeseries():
@@ -22,8 +23,6 @@ def get_timeseries():
             series_data.append({"timestamp": timestamp, "value": value})
         data.append({"name": label, "data": series_data})
     return {"data": data}
-
-app.include_router(data_extraction_router, prefix="/data-extraction")
 
 if __name__ == "__main__":
     import uvicorn
