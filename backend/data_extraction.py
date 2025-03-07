@@ -4,7 +4,7 @@ import os
 
 from docling.document_converter import DocumentConverter
 
-router = APIRouter()
+router = APIRouter(tags=["Data Extraction"])
 
 @router.post("/process_pdf")
 async def process_pdf(pdf_file: UploadFile = File(...)):
