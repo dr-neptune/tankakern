@@ -13,9 +13,9 @@ if config.config_file_name is not None:
 # Ensure the backend directory is in sys.path so models can be imported.
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from backend.db.session import engine  # our engine from the data layer
+from db.session import engine  # our engine from the data layer
 from sqlmodel import SQLModel
-from backend.models.user import User  # make sure the User model is imported
+from models.user import User  # make sure the User model is imported
 
 target_metadata = SQLModel.metadata
 
