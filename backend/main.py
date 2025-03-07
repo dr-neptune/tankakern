@@ -4,11 +4,13 @@ import random
 from routes.data_extraction import router as data_extraction_router
 from routes.performance import router as performance_router
 from routes.extractive_qa import router as extractive_qa_router
+from routes.extract_tables import router as extract_tables_router
 
 app = FastAPI()
 app.include_router(data_extraction_router, prefix="/data-extraction")
 app.include_router(performance_router, prefix="/performance")
 app.include_router(extractive_qa_router, prefix="/extractive-qa")
+app.include_router(extract_tables_router, prefix="/extract-tables")
 
 if __name__ == "__main__":
     import uvicorn
