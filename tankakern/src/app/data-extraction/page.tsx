@@ -17,7 +17,7 @@ export default function DataExtractionPage() {
     setDescription(e.target.value);
   };
 
-  const [extractedMarkdown, setExtractedMarkdown] = useState<string>("");
+  const [extractedResult, setExtractedResult] = useState<any>(null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,7 +35,7 @@ export default function DataExtractionPage() {
     })
       .then((response) => response.json())
       .then((result) => {
-          setExtractedMarkdown(JSON.stringify(result, null, 2));
+          setExtractedResult(result);
       })
       .catch((error) => {
         console.error("Error extracting data:", error);
@@ -93,27 +93,20 @@ export default function DataExtractionPage() {
           <p className="mt-2">Processing query: {description}</p>
         </div>
       )}
-      {extractedMarkdown && (
+      {extractedResult && (
         <div className="mt-6">
           <h2 className="text-2xl font-bold mb-4">Extracted Results</h2>
-          {(() => {
-            try {
-              const qaResult = JSON.parse(extractedMarkdown);
-              if (
-                qaResult.reader &&
-                qaResult.reader.answers &&
-                Array.isArray(qaResult.reader.answers)
-              ) {
-                return qaResult.reader.answers.map((answer: any, index: number) => (
-                  <ResultCard key={index} answer={answer} />
-                ));
-              } else {
-                return <pre className="whitespace-pre-wrap">{extractedMarkdown}</pre>;
-              }
-            } catch (e) {
-              return <pre className="whitespace-pre-wrap">{extractedMarkdown}</pre>;
-            }
-          })()}
+          {extractedResult.reader &&
+          extractedResult.reader.answers &&
+          Array.isArray(extractedResult.reader.answers) ? (
+            extractedResult.reader.answers.map((answer: any, index: number) => (
+              <ResultCard key={index} answer={answer} />
+            ))
+          ) : (
+            <pre className="whitespace-pre-wrap">
+              {JSON.stringify(extractedResult, null, 2)}
+            </pre>
+          )}
         </div>
       )}
     </div>
