@@ -10,8 +10,22 @@ interface TableViewerProps {
 
 export default function TableViewer({ markdown }: TableViewerProps) {
   return (
-    <div className="markdown-table overflow-auto">
-      <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
+    <div className="markdown-table overflow-auto p-4">
+      <ReactMarkdown
+        rehypePlugins={[rehypeRaw]}
+        remarkPlugins={[remarkGfm]}
+        components={{
+          table: ({node, ...props}) => (
+            <table className="table-auto w-full border-collapse border border-gray-300" {...props} />
+          ),
+          th: ({node, ...props}) => (
+            <th className="border border-gray-300 px-4 py-2 bg-gray-100" {...props} />
+          ),
+          td: ({node, ...props}) => (
+            <td className="border border-gray-300 px-4 py-2" {...props} />
+          ),
+        }}
+      >
         {markdown}
       </ReactMarkdown>
     </div>
