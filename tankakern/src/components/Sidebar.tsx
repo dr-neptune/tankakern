@@ -60,6 +60,7 @@ export default function Sidebar() {
           </li>
         </ul>
       </div>
+      <ul className="menu bg-base-100 p-2 rounded-box mt-4">
         <li>
           <Link href="/performance" className="flex items-center gap-2">
             <svg
