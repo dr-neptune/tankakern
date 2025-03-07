@@ -1,27 +1,27 @@
 export const daisyNightTheme = {
   layout: {
-    paper_bgcolor: "#222222", // dark background matching DaisyUI night theme
-    plot_bgcolor: "#222222",
+    paper_bgcolor: "#1a1a1a", // dark background matching daisyUI night theme
+    plot_bgcolor: "#1a1a1a",
     font: {
-      color: "#e5e5e5",
+      color: "#d9d9d9",
     },
     // Use primary, secondary, and accent as the colorway for lines/bars etc.
-    colorway: ["#9b59b6", "#f1c40f", "#e74c3c"],
+    colorway: ["#9b59b6", "#f000b8", "#37cdbe"],
     xaxis: {
-      gridcolor: "#444444",
-      zerolinecolor: "#444444",
-      color: "#e5e5e5",
-      title: { font: { color: "#e5e5e5" } },
+      gridcolor: "#333333",
+      zerolinecolor: "#333333",
+      color: "#d9d9d9",
+      title: { font: { color: "#d9d9d9" } },
     },
     yaxis: {
-      gridcolor: "#444444",
-      zerolinecolor: "#444444",
-      color: "#e5e5e5",
-      title: { font: { color: "#e5e5e5" } },
+      gridcolor: "#333333",
+      zerolinecolor: "#333333",
+      color: "#d9d9d9",
+      title: { font: { color: "#d9d9d9" } },
     },
     title: {
       font: {
-        color: "#e5e5e5",
+        color: "#d9d9d9",
       },
     },
   },
