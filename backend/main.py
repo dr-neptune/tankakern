@@ -5,12 +5,14 @@ from routes.data_extraction import router as data_extraction_router
 from routes.performance import router as performance_router
 from routes.extractive_qa import router as extractive_qa_router
 from routes.extract_tables import router as extract_tables_router
+from routes.auth import router as auth_router
 
 app = FastAPI()
 app.include_router(data_extraction_router, prefix="/data-extraction")
 app.include_router(performance_router, prefix="/performance")
 app.include_router(extractive_qa_router, prefix="/data-extraction/process")
 app.include_router(extract_tables_router, prefix="/data-extraction/tables")
+app.include_router(auth_router, prefix="/auth")
 
 if __name__ == "__main__":
     import uvicorn
