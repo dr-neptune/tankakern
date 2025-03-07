@@ -17,6 +17,7 @@ export default function Login() {
     if (res.ok) {
       const data = await res.json();
       setUser(data.user);
+      localStorage.setItem("user", JSON.stringify(data.user));
       setMessage("Login successful!");
     } else {
       const error = await res.json();

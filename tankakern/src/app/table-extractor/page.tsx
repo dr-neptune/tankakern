@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PdfUpload from "../../components/PdfUpload";
 import TableViewer from "../../components/TableViewer";
 import * as XLSX from "xlsx";
@@ -8,6 +8,13 @@ export default function TableExtractor() {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [tables, setTables] = useState<any[]>([]);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser) {
+      alert("You must be logged in to use this feature. Please register or log in.");
+    }
+  }, []);
 
   const parseMarkdownTable = (markdown: string) => {
     const lines = markdown.split('\n').filter(line => line.trim() !== '');

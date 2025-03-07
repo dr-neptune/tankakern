@@ -1,7 +1,15 @@
 "use client";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 export default function Sidebar() {
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
   return (
     <aside className="menu w-64 p-4 bg-base-100 text-base-content">
       <div className="mb-4">
@@ -124,6 +132,13 @@ export default function Sidebar() {
           </Link>
         </li>
       </ul>
+      {user && (
+        <div className="mt-4 text-center">
+          <p className="text-sm">
+            Logged in as: <span className="font-bold">{user.username}</span>
+          </p>
+        </div>
+      )}
     </aside>
   );
 }
