@@ -27,8 +27,8 @@ def get_timeseries(steps: int = 100, starting_value: int = 0, num_processes: int
             prices.append(new_price)
         offset = starting_value - prices[0]
         prices = [p + offset for p in prices]
+        timestamps = [(now - timedelta(minutes=5 * (N - 1 - i))).isoformat() + "Z" for i in range(N)]
         for i in range(N):
-            timestamp = (now - timedelta(minutes=5 * i)).isoformat() + "Z"
-            series_data.append({"timestamp": timestamp, "value": round(prices[i], 2)})
+            series_data.append({"timestamp": timestamps[i], "value": round(prices[i], 2)})
         data.append({"name": label, "data": series_data})
     return {"data": data}
