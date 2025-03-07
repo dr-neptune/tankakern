@@ -37,7 +37,7 @@ export default function DataExtractionPage() {
     })
       .then((response) => response.json())
       .then((result) => {
-        setExtractedTables(result.tables);
+        setExtractedTables(result.tables || []);
       })
       .catch((error) => {
         console.error("Error extracting tables:", error);
