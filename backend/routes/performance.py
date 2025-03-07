@@ -17,7 +17,7 @@ def get_timeseries(steps: int = 100, starting_value: int = 0, num_processes: int
         # Generate 10 data points using Geometric Brownian Motion
         N = steps
         dt = 1
-        S0 = starting_value
+        S0 = 1  # fixed initial value for simulation
         mu = 0.05
         sigma = 0.2
         rand = np.random.normal(0, 1, size=N)
@@ -25,6 +25,8 @@ def get_timeseries(steps: int = 100, starting_value: int = 0, num_processes: int
         for i in range(1, N):
             new_price = prices[-1] * np.exp((mu - 0.5 * sigma**2) * dt + sigma * np.sqrt(dt) * rand[i])
             prices.append(new_price)
+        # Shift prices by the desired starting_value so that the trajectory starts at starting_value + 1
+        prices = [starting_value + p for p in prices]
         for i in range(N):
             timestamp = (now - timedelta(minutes=5 * i)).isoformat() + "Z"
             series_data.append({"timestamp": timestamp, "value": round(prices[i], 2)})
