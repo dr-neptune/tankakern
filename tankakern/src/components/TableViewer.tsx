@@ -18,11 +18,15 @@ export default function TableViewer({ markdown }: TableViewerProps) {
           table: ({node, ...props}) => (
             <table className="table-auto w-full border-collapse border border-gray-300" {...props} />
           ),
-          th: ({node, ...props}) => (
-            <th className="border border-gray-300 px-4 py-2 bg-gray-100" {...props} />
+          th: ({node, children, ...props}) => (
+            <th className="border border-gray-300 px-4 py-2 bg-gray-100" {...props}>
+              {!children || (Array.isArray(children) && children.join("").trim() === "") ? "\u00A0" : children}
+            </th>
           ),
-          td: ({node, ...props}) => (
-            <td className="border border-gray-300 px-4 py-2" {...props} />
+          td: ({node, children, ...props}) => (
+            <td className="border border-gray-300 px-4 py-2" {...props}>
+              {!children || (Array.isArray(children) && children.join("").trim() === "") ? "\u00A0" : children}
+            </td>
           ),
         }}
       >
