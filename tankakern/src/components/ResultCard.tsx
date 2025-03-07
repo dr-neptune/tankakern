@@ -1,5 +1,7 @@
 "use client";
 import React from "react";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 
 const renderHighlightedContext = (
   context: string,
@@ -8,12 +10,13 @@ const renderHighlightedContext = (
   const before = context.slice(0, offset.start);
   const highlight = context.slice(offset.start, offset.end);
   const after = context.slice(offset.end);
+  const combined = `${before}<mark class="bg-yellow-300 px-1">${highlight}</mark>${after}`;
   return (
-    <p className="whitespace-pre-wrap">
-      {before}
-      <mark className="bg-yellow-300 px-1">{highlight}</mark>
-      {after}
-    </p>
+    <div className="whitespace-pre-wrap">
+      <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+        {combined}
+      </ReactMarkdown>
+    </div>
   );
 };
 
