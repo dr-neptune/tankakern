@@ -41,6 +41,11 @@ export default function DataExtractionPage() {
             onChange={handleFileChange}
             className="mt-1 block w-full text-gray-900 bg-gray-100 border border-gray-300 rounded-md cursor-pointer focus:outline-none"
           />
+          {pdfFile && (
+            <p className="mt-2 text-sm text-gray-600">
+              Selected file: {pdfFile.name}
+            </p>
+          )}
         </div>
         <div>
           <label htmlFor="description" className="block text-sm font-medium text-gray-700">
