@@ -1,25 +1,26 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, File, UploadFile, Form
 from haystack import Document, Pipeline
 from haystack.document_stores.in_memory import InMemoryDocumentStore
 from haystack.components.retrievers.in_memory import InMemoryEmbeddingRetriever
 from haystack.components.readers import ExtractiveReader
 from haystack.components.embedders import SentenceTransformersDocumentEmbedder, SentenceTransformersTextEmbedder
 from haystack.components.writers import DocumentWriter
+from backend.utils.pdf_processing import process_pdf_to_markdown
 
 router = APIRouter(tags=["Extractive QA"])
 
 @router.post("/process")
-async def process_extractive_qa(payload: dict):
+async def process_extractive_qa(
+    pdf_file: UploadFile = File(...),
+    query: str = Form(...)
+):
     """
-    Accepts a JSON payload with two keys: 'markdown' (the output from docling)
-    and 'query' (the question to ask). It builds a minimal Haystack extractive QA pipeline,
-    indexes the provided markdown as a single document, and returns the QA results.
+    Accepts a PDF file upload and a form field 'query'.
+    Processes the PDF using docling, builds a minimal Haystack extractive QA pipeline,
+    indexes the resulting markdown as a single document, and returns the QA results.
     """
-    markdown = payload.get("markdown")
-    query = payload.get("query")
-    if not markdown or not query:
-        raise HTTPException(status_code=400, detail="Both 'markdown' and 'query' must be provided.")
-
+    markdown = await process_pdf_to_markdown(pdf_file)
+    
     # Create a document store and index the provided markdown as one document.
     document_store = InMemoryDocumentStore()
     document = Document(content=markdown, meta={"source": "docling"})
