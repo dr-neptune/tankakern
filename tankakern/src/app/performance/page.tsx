@@ -7,6 +7,27 @@ import { daisyNightTheme } from "../../theme/plotlyTheme";
 export default function PerformancePage() {
   const [data, setData] = useState<Array<{ name: string; data: Array<{ timestamp: string; value: number }> }>>([]);
   const [loading, setLoading] = useState(true);
+  const [steps, setSteps] = useState<number>(100);
+
+  const fetchData = () => {
+    setLoading(true);
+    fetch(`http://localhost:8000/performance/timeseries?steps=${steps}`)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.data) {
+          setData(result.data);
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching timeseries data:", error);
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   useEffect(() => {
     fetch("http://localhost:8000/performance/timeseries")
@@ -43,6 +64,18 @@ export default function PerformancePage() {
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-4">Performance</h1>
+      <div className="flex flex-col md:flex-row items-center mb-4 gap-4">
+        <input
+          type="number"
+          value={steps}
+          onChange={(e) => setSteps(Number(e.target.value))}
+          className="input input-bordered w-32"
+          placeholder="Steps"
+        />
+        <button className="btn btn-primary" onClick={fetchData}>
+          Refresh Plot
+        </button>
+      </div>
       {loading ? (
         <p>Loading data...</p>
       ) : (
