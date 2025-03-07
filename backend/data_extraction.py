@@ -11,4 +11,4 @@ app = FastAPI(
 def read_root():
     return {"message": "Welcome to the Zappa API"}
 
-app.include_router(data_extraction_router)
+app.include_router(data_extraction_router, prefix="/data-extraction")
