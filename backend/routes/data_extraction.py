@@ -1,5 +1,5 @@
 from fastapi import APIRouter, File, UploadFile, HTTPException
-from backend.utils.pdf_processing import process_pdf_to_markdown
+from utils.pdf_processing import process_pdf_to_markdown
 
 router = APIRouter(tags=["Data Extraction"])
 

@@ -5,7 +5,7 @@ from haystack.components.retrievers.in_memory import InMemoryEmbeddingRetriever
 from haystack.components.readers import ExtractiveReader
 from haystack.components.embedders import SentenceTransformersDocumentEmbedder, SentenceTransformersTextEmbedder
 from haystack.components.writers import DocumentWriter
-from backend.utils.pdf_processing import process_pdf_to_markdown
+from utils.pdf_processing import process_pdf_to_markdown
 
 router = APIRouter(tags=["Extractive QA"])
 
