@@ -28,6 +28,8 @@
           pkgs.python312Packages.uvicorn
           pkgs.python312Packages.ruff
           pkgs.python312Packages.ipython
+	  pkgs.python312Packages.sqlmodel
+	  pkgs.python312Packages.alembic
         ];
 
         shellHook = ''

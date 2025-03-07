@@ -1,6 +1,7 @@
 from sqlmodel import create_engine, Session, SQLModel
+from models.user import User
 
-DATABASE_URL = "sqlite:///./database.db"  # Modify this URL for your production database
+DATABASE_URL = "sqlite:///./database.db"
 
 engine = create_engine(DATABASE_URL, echo=True)
 
