@@ -39,7 +39,7 @@ export default function DataExtractionPage() {
             id="pdf-upload"
             accept="application/pdf"
             onChange={handleFileChange}
-            className="mt-1 block w-full text-gray-900 bg-gray-100 border border-gray-300 rounded-md cursor-pointer focus:outline-none"
+            className="file-input file-input-bordered w-full"
           />
           {pdfFile && (
             <p className="mt-2 text-sm text-gray-600">
@@ -57,7 +57,7 @@ export default function DataExtractionPage() {
             value={description}
             onChange={handleDescriptionChange}
             placeholder="e.g., extract tables related to financial performance"
-            className="mt-1 block w-full p-2 bg-gray-100 border border-gray-300 rounded-md focus:outline-none"
+            className="textarea textarea-bordered w-full"
           />
         </div>
         <button type="submit" className="btn btn-primary">
