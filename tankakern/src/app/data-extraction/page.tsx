@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import ResultCard from "../../components/ResultCard";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 
 export default function DataExtractionPage() {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
@@ -18,6 +20,32 @@ export default function DataExtractionPage() {
   };
 
   const [extractedResult, setExtractedResult] = useState<any>(null);
+  const [extractedTables, setExtractedTables] = useState<any[]>([]);
+
+  const handleExtractTables = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (!pdfFile) {
+      alert("Please select a PDF file.");
+      return;
+    }
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("pdf_file", pdfFile);
+    fetch("http://localhost:8000/extract-tables", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        setExtractedTables(result.tables);
+      })
+      .catch((error) => {
+        console.error("Error extracting tables:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -91,6 +119,9 @@ export default function DataExtractionPage() {
           Extract Data
         </button>
       </form>
+      <button onClick={handleExtractTables} className="btn btn-secondary mt-4">
+        Extract Tables
+      </button>
       {loading && (
         <div className="mt-6">
           <progress className="progress progress-info w-56"></progress>
@@ -111,6 +142,21 @@ export default function DataExtractionPage() {
               {JSON.stringify(extractedResult, null, 2)}
             </pre>
           )}
+        </div>
+      )}
+      {extractedTables.length > 0 && (
+        <div className="mt-6">
+          <h2 className="text-2xl font-bold mb-4">Extracted Tables</h2>
+          {extractedTables.map((table, index) => (
+            <div key={index} className="mb-4">
+              <h3 className="text-xl mb-2">Table {table.table_index + 1}</h3>
+              <div className="markdown-answer">
+                <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+                  {table.markdown}
+                </ReactMarkdown>
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>
