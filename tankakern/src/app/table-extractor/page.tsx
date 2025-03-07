@@ -2,11 +2,44 @@
 import { useState } from "react";
 import PdfUpload from "../../components/PdfUpload";
 import TableViewer from "../../components/TableViewer";
+import * as XLSX from "xlsx";
 
 export default function TableExtractor() {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [tables, setTables] = useState<any[]>([]);
+
+  const parseMarkdownTable = (markdown: string) => {
+    const lines = markdown.split('\n').filter(line => line.trim() !== '');
+    // If the second line is a divider, remove it.
+    if (lines.length > 1 && lines[1].match(/^\|[-\s:|]+$/)) {
+      lines.splice(1, 1);
+    }
+    const data = lines.map(line => {
+      // Remove leading/trailing pipes and split by pipe
+      const row = line.replace(/^\|/, '').replace(/\|$/, '').split('|').map(cell => cell.trim());
+      return row;
+    });
+    return data;
+  };
+
+  const handleDownloadTable = (table: any) => {
+    const data = parseMarkdownTable(table.markdown);
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, `Table${table.table_index + 1}`);
+    XLSX.writeFile(wb, `Table_${table.table_index + 1}.xlsx`);
+  };
+
+  const handleDownloadAllTables = () => {
+    const wb = XLSX.utils.book_new();
+    tables.forEach((table, index) => {
+      const data = parseMarkdownTable(table.markdown);
+      const ws = XLSX.utils.aoa_to_sheet(data);
+      XLSX.utils.book_append_sheet(wb, ws, `Table${index + 1}`);
+    });
+    XLSX.writeFile(wb, `All_Tables.xlsx`);
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -61,9 +94,17 @@ export default function TableExtractor() {
       {tables.length > 0 && (
         <div className="mt-6">
           <h2 className="text-2xl font-bold mb-4">Extracted Tables</h2>
+          <button onClick={handleDownloadAllTables} className="btn btn-accent mb-4">
+            Download All Tables as Excel
+          </button>
           {tables.map((table: any, index: number) => (
             <div key={index} className="mb-4">
-              <h3 className="text-xl font-semibold mb-2">Table {table.table_index + 1}:</h3>
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-xl font-semibold">Table {table.table_index + 1}:</h3>
+                <button onClick={() => handleDownloadTable(table)} className="btn btn-secondary text-sm">
+                  Export Table
+                </button>
+              </div>
               <TableViewer markdown={table.markdown} />
             </div>
           ))}
