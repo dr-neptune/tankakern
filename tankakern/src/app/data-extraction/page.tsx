@@ -15,11 +15,29 @@ export default function DataExtractionPage() {
     setDescription(e.target.value);
   };
 
+  const [extractedMarkdown, setExtractedMarkdown] = useState<string>("");
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: Handle file upload and data extraction logic here
-    console.log("PDF File:", pdfFile);
-    console.log("Description:", description);
+    if (!pdfFile) {
+      alert("Please select a PDF file.");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("pdf_file", pdfFile);
+    fetch("http://localhost:8000/data-extraction/process_pdf", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.markdown) {
+          setExtractedMarkdown(result.markdown);
+        }
+      })
+      .catch((error) => {
+        console.error("Error extracting data:", error);
+      });
   };
 
   return (
@@ -64,6 +82,12 @@ export default function DataExtractionPage() {
           Extract Data
         </button>
       </form>
+      {extractedMarkdown && (
+        <div className="mt-6 p-4 bg-base-200 rounded-lg shadow">
+          <h2 className="text-2xl font-bold mb-4">Extracted Data</h2>
+          <pre className="whitespace-pre-wrap">{extractedMarkdown}</pre>
+        </div>
+      )}
     </div>
   );
 }
