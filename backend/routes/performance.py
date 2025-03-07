@@ -14,17 +14,19 @@ def get_timeseries(steps: int = 100, starting_value: int = 0, num_processes: int
     data = []
     for label in series_labels:
         series_data = []
-        # Generate data points using Geometric Brownian Motion, starting from the specified starting_value
+        # Generate data points using Geometric Brownian Motion; simulate with baseline S0_sim=1, then shift to starting_value
         N = steps
         dt = 1
-        S0 = starting_value  # use provided starting value for simulation
+        S0_sim = 1
         mu = 0.05
         sigma = 0.2
         rand = np.random.normal(0, 1, size=N)
-        prices = [S0]
+        prices = [S0_sim]
         for i in range(1, N):
             new_price = prices[-1] * np.exp((mu - 0.5 * sigma**2) * dt + sigma * np.sqrt(dt) * rand[i])
             prices.append(new_price)
+        offset = starting_value - prices[0]
+        prices = [p + offset for p in prices]
         for i in range(N):
             timestamp = (now - timedelta(minutes=5 * i)).isoformat() + "Z"
             series_data.append({"timestamp": timestamp, "value": round(prices[i], 2)})
