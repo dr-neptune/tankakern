@@ -26,7 +26,7 @@ export default function ExtractiveQA() {
     formData.append("pdf_file", pdfFile);
     formData.append("query", query);
     try {
-      const res = await fetch("http://localhost:8000/extractive-qa/process", {
+      const res = await fetch("http://localhost:8000/data-extraction/process", {
         method: "POST",
         body: formData,
       });

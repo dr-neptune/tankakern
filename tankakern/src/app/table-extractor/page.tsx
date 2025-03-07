@@ -57,7 +57,7 @@ export default function TableExtractor() {
     const formData = new FormData();
     formData.append("pdf_file", pdfFile);
     try {
-      const res = await fetch("http://localhost:8000/extract-tables", {
+      const res = await fetch("http://localhost:8000/data-extraction/tables", {
         method: "POST",
         body: formData,
       });
