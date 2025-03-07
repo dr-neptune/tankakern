@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import ResultCard from "../../components/ResultCard";
 
 export default function DataExtractionPage() {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
@@ -93,9 +94,26 @@ export default function DataExtractionPage() {
         </div>
       )}
       {extractedMarkdown && (
-        <div className="mt-6 p-4 bg-base-200 rounded-lg shadow">
-          <h2 className="text-2xl font-bold mb-4">Extracted Data</h2>
-          <pre className="whitespace-pre-wrap">{extractedMarkdown}</pre>
+        <div className="mt-6">
+          <h2 className="text-2xl font-bold mb-4">Extracted Results</h2>
+          {(() => {
+            try {
+              const qaResult = JSON.parse(extractedMarkdown);
+              if (
+                qaResult.reader &&
+                qaResult.reader.answers &&
+                Array.isArray(qaResult.reader.answers)
+              ) {
+                return qaResult.reader.answers.map((answer: any, index: number) => (
+                  <ResultCard key={index} answer={answer} />
+                ));
+              } else {
+                return <pre className="whitespace-pre-wrap">{extractedMarkdown}</pre>;
+              }
+            } catch (e) {
+              return <pre className="whitespace-pre-wrap">{extractedMarkdown}</pre>;
+            }
+          })()}
         </div>
       )}
     </div>
