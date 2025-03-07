@@ -4,6 +4,7 @@ import { useState } from "react";
 export default function DataExtractionPage() {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -23,6 +24,7 @@ export default function DataExtractionPage() {
       alert("Please select a PDF file.");
       return;
     }
+    setLoading(true);
     const formData = new FormData();
     formData.append("pdf_file", pdfFile);
     fetch("http://localhost:8000/data-extraction/process_pdf", {
@@ -37,6 +39,9 @@ export default function DataExtractionPage() {
       })
       .catch((error) => {
         console.error("Error extracting data:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -82,6 +87,12 @@ export default function DataExtractionPage() {
           Extract Data
         </button>
       </form>
+      {loading && (
+        <div className="mt-6">
+          <progress className="progress progress-info w-56"></progress>
+          <p className="mt-2">Processing query: {description}</p>
+        </div>
+      )}
       {extractedMarkdown && (
         <div className="mt-6 p-4 bg-base-200 rounded-lg shadow">
           <h2 className="text-2xl font-bold mb-4">Extracted Data</h2>
