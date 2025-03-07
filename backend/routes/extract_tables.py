@@ -5,7 +5,7 @@ from docling.document_converter import DocumentConverter
 
 router = APIRouter()
 
-@router.post("/extract-tables")
+@router.post("/")
 async def extract_tables(pdf_file: UploadFile):
     if pdf_file.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="Invalid file type. Please upload a PDF file.")
