@@ -1,23 +1,23 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from datetime import datetime, timedelta
 import numpy as np
 
 router = APIRouter(tags=["Performance"])
 
 @router.get("/timeseries")
-def get_timeseries(steps: int = 100):
+def get_timeseries(steps: int = 100, starting_value: int = 0, num_processes: int = Query(1, ge=1, le=10)):
     """
     Return fake time series data as a list of time series, each with timestamp-value pairs.
     """
     now = datetime.utcnow()
-    series_labels = ["Series A", "Series B", "Series C"]
+    series_labels = [f"Process {i}" for i in range(1, num_processes + 1)]
     data = []
     for label in series_labels:
         series_data = []
         # Generate 10 data points using Geometric Brownian Motion
         N = steps
         dt = 1
-        S0 = 100
+        S0 = starting_value
         mu = 0.05
         sigma = 0.2
         rand = np.random.normal(0, 1, size=N)

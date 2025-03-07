@@ -8,10 +8,12 @@ export default function PerformancePage() {
   const [data, setData] = useState<Array<{ name: string; data: Array<{ timestamp: string; value: number }> }>>([]);
   const [loading, setLoading] = useState(true);
   const [steps, setSteps] = useState<number>(100);
+  const [startingValue, setStartingValue] = useState<number>(0);
+  const [numProcesses, setNumProcesses] = useState<number>(1);
 
   const fetchData = () => {
     setLoading(true);
-    fetch(`http://localhost:8000/performance/timeseries?steps=${steps}`)
+    fetch(`http://localhost:8000/performance/timeseries?steps=${steps}&starting_value=${startingValue}&num_processes=${numProcesses}`)
       .then((response) => response.json())
       .then((result) => {
         if (result.data) {
@@ -71,6 +73,22 @@ export default function PerformancePage() {
           onChange={(e) => setSteps(Number(e.target.value))}
           className="input input-bordered w-32"
           placeholder="Steps"
+        />
+        <input
+          type="number"
+          value={startingValue}
+          onChange={(e) => setStartingValue(Number(e.target.value))}
+          className="input input-bordered w-32"
+          placeholder="Starting Value"
+        />
+        <input
+          type="number"
+          value={numProcesses}
+          onChange={(e) => setNumProcesses(Number(e.target.value))}
+          className="input input-bordered w-32"
+          placeholder="Processes"
+          min={1}
+          max={10}
         />
         <button className="btn btn-primary" onClick={fetchData}>
           Refresh Plot
