@@ -27,15 +27,13 @@ export default function DataExtractionPage() {
     setLoading(true);
     const formData = new FormData();
     formData.append("pdf_file", pdfFile);
-    fetch("http://localhost:8000/data-extraction/process_pdf", {
+    fetch("http://localhost:8000/extractive-qa/process", {
       method: "POST",
       body: formData,
     })
       .then((response) => response.json())
       .then((result) => {
-        if (result.markdown) {
-          setExtractedMarkdown(result.markdown);
-        }
+          setExtractedMarkdown(JSON.stringify(result, null, 2));
       })
       .catch((error) => {
         console.error("Error extracting data:", error);
@@ -47,7 +45,7 @@ export default function DataExtractionPage() {
 
   return (
     <div className="p-8 max-w-3xl mx-auto">
-      <h1 className="text-4xl font-bold mb-6">Data Extraction</h1>
+      <h1 className="text-4xl font-bold mb-6">Extractive QA</h1>
       <p className="mb-8 text-lg">
         Welcome to the Data Extraction tool. Here, you can upload a PDF file and specify what information you need extracted from it.
         This tool is designed to help you quickly extract the relevant data from your documents.
@@ -72,14 +70,14 @@ export default function DataExtractionPage() {
         </div>
         <div>
           <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-            What data are you looking for?
+            Enter your question:
           </label>
           <textarea
             id="description"
             rows={4}
             value={description}
             onChange={handleDescriptionChange}
-            placeholder="e.g., extract tables related to financial performance"
+            placeholder="e.g., What is the impact on revenue?"
             className="textarea textarea-bordered w-full"
           />
         </div>
