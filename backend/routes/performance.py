@@ -5,7 +5,7 @@ import numpy as np
 router = APIRouter(tags=["Performance"])
 
 @router.get("/timeseries")
-def get_timeseries():
+def get_timeseries(steps: int = 100):
     """
     Return fake time series data as a list of time series, each with timestamp-value pairs.
     """
@@ -15,7 +15,7 @@ def get_timeseries():
     for label in series_labels:
         series_data = []
         # Generate 10 data points using Geometric Brownian Motion
-        N = 10
+        N = steps
         dt = 1
         S0 = 100
         mu = 0.05
