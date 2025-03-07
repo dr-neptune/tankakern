@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from datetime import datetime, timedelta
 import random
-from data_extraction import router as data_extraction_router
+from routes.data_extraction import router as data_extraction_router
 from routes.performance import router as performance_router
 
 app = FastAPI()
