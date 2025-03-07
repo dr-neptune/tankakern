@@ -1,13 +1,3 @@
-export default function DataExtractionPage() {
-  return (
-    <div className="card w-full bg-base-100 shadow-xl">
-      <div className="card-body">
-        <h1 className="card-title">Data Extraction</h1>
-        <p>This is a placeholder page for Data Extraction.</p>
-      </div>
-    </div>
-  );
-}
 "use client";
 import { useState } from "react";
 
@@ -33,14 +23,15 @@ export default function DataExtractionPage() {
   };
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-4">Data Extraction</h1>
-      <p className="mb-6">
-        Upload a PDF document and describe what information you wish to extract. The system will process your document and extract the relevant data.
+    <div className="p-8 max-w-3xl mx-auto">
+      <h1 className="text-4xl font-bold mb-6">Data Extraction</h1>
+      <p className="mb-8 text-lg">
+        Welcome to the Data Extraction tool. Here, you can upload a PDF file and specify what information you need extracted from it.
+        This tool is designed to help you quickly extract the relevant data from your documents.
       </p>
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6 bg-base-200 p-6 rounded-lg shadow">
         <div>
-          <label htmlFor="pdf-upload" className="block text-sm font-medium text-gray-300">
+          <label htmlFor="pdf-upload" className="block text-sm font-medium text-gray-700">
             PDF Document
           </label>
           <input
@@ -52,7 +43,7 @@ export default function DataExtractionPage() {
           />
         </div>
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-300">
+          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
             What data are you looking for?
           </label>
           <textarea
