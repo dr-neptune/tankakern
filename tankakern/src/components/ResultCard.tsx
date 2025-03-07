@@ -33,7 +33,12 @@ export default function ResultCard({ answer }: ResultCardProps) {
   return (
     <div className="card bg-base-200 shadow-xl mb-4">
       <div className="card-body">
-        <h2 className="card-title">Answer: {answer.data || "No answer provided"}</h2>
+        <h2 className="card-title">Answer:</h2>
+        <div className="markdown-answer">
+          <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+            {answer.data || "No answer provided"}
+          </ReactMarkdown>
+        </div>
         <p>Score: {answer.score}</p>
         {answer.document_offset && (
           <p>
