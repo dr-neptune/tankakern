@@ -7,14 +7,40 @@ const renderHighlightedContext = (
   context: string,
   offset: { start: number; end: number }
 ) => {
-  const truncatedContext = context.length > 1500 ? context.slice(0, 1500) : context;
+  const windowSize = 1500;
+
+  if (context.length <= windowSize) {
+    // If context is shorter than the window, no need to truncate.
+    const before = context.slice(0, offset.start);
+    const highlight = context.slice(offset.start, offset.end);
+    const after = context.slice(offset.end);
+    const combined = `${before}<mark class="bg-yellow-300 px-1">${highlight}</mark>${after}`;
+    return (
+      <div className="whitespace-pre-wrap">
+        <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+          {combined}
+        </ReactMarkdown>
+      </div>
+    );
+  }
+
+  // Calculate the center of the highlighted region.
+  let highlightCenter = Math.floor((offset.start + offset.end) / 2);
+  let excerptStart = highlightCenter - Math.floor(windowSize / 2);
+  if (excerptStart < 0) excerptStart = 0;
+  let excerptEnd = excerptStart + windowSize;
+  if (excerptEnd > context.length) {
+    excerptEnd = context.length;
+    excerptStart = Math.max(0, context.length - windowSize);
+  }
   const adjustedOffset = {
-    start: Math.min(offset.start, truncatedContext.length),
-    end: Math.min(offset.end, truncatedContext.length)
+    start: offset.start - excerptStart,
+    end: offset.end - excerptStart,
   };
-  const before = truncatedContext.slice(0, adjustedOffset.start);
-  const highlight = truncatedContext.slice(adjustedOffset.start, adjustedOffset.end);
-  const after = truncatedContext.slice(adjustedOffset.end);
+  const excerpt = context.slice(excerptStart, excerptEnd);
+  const before = excerpt.slice(0, adjustedOffset.start);
+  const highlight = excerpt.slice(adjustedOffset.start, adjustedOffset.end);
+  const after = excerpt.slice(adjustedOffset.end);
   const combined = `${before}<mark class="bg-yellow-300 px-1">${highlight}</mark>${after}`;
   return (
     <div className="whitespace-pre-wrap">
