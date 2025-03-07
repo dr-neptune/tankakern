@@ -8,7 +8,7 @@ export default function PerformancePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8000/timeseries")
+    fetch("http://localhost:8000/performance/timeseries")
       .then((response) => response.json())
       .then((result) => {
         if (result.data) {
