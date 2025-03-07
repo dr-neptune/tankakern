@@ -24,26 +24,41 @@ export default function Sidebar() {
           </button>
         </Link>
       </div>
-      <ul>
-        <li>
-          <Link href="/data-extraction" className="flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="2"
-              stroke="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M7 8h10M7 12h10m-6 4h6"
-              />
-            </svg>
-            Data Extraction
-          </Link>
-        </li>
+      <div className="mt-4">
+        <span className="block text-sm font-bold text-gray-700 mb-2">Data Extraction</span>
+        <ul className="menu bg-base-100 p-2 rounded-box">
+          <li>
+            <Link href="/extractive-qa" className="flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="2"
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3" />
+              </svg>
+              Extractive QA
+            </Link>
+          </li>
+          <li>
+            <Link href="/table-extractor" className="flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="2"
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18" />
+              </svg>
+              Table Extractor
+            </Link>
+          </li>
+        </ul>
+      </div>
         <li>
           <Link href="/performance" className="flex items-center gap-2">
             <svg
