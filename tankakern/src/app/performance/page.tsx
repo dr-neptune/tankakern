@@ -4,7 +4,7 @@ import Plot from "react-plotly.js";
 import { daisyNightTheme } from "../../theme/plotlyTheme";
 
 export default function PerformancePage() {
-  const [data, setData] = useState<Array<{ timestamp: string; value: number }>>([]);
+  const [data, setData] = useState<Array<{ name: string; data: Array<{ timestamp: string; value: number }> }>>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -30,15 +30,14 @@ export default function PerformancePage() {
     autosize: true,
   };
 
-  const plotData = [
-    {
-      x: data.map((item) => item.timestamp),
-      y: data.map((item) => item.value),
+  const plotData = data.map((series, index) => ({
+      x: series.data.map((item) => item.timestamp),
+      y: series.data.map((item) => item.value),
       type: "scatter",
       mode: "lines+markers",
-      marker: { color: daisyNightTheme.layout.colorway[0] },
-    },
-  ];
+      name: series.name,
+      marker: { color: daisyNightTheme.layout.colorway[index % daisyNightTheme.layout.colorway.length] },
+  }));
 
   return (
     <div className="p-8">
