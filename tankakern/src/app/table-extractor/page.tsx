@@ -39,8 +39,12 @@ export default function TableExtractor() {
   return (
     <div className="p-8 max-w-3xl mx-auto">
       <h1 className="text-4xl font-bold mb-6">Table Extraction</h1>
+      <p className="mb-4 text-lg">
+        This page extracts tables from your PDF document, converting them to nicely formatted markdown tables.
+        For best results, please ensure the tables in your document are well-structured.
+      </p>
       <p className="mb-4 text-lg text-blue-600">
-        Note: This page extracts all tables from your PDF document. It works best when the PDF contains well-defined tables.
+        Note: This page works best when the PDF contains clear, well-defined tables.
       </p>
       <div className="space-y-6 bg-base-200 p-6 rounded-lg shadow">
         <PdfUpload pdfFile={pdfFile} handleFileChange={handleFileChange} />
@@ -50,7 +54,8 @@ export default function TableExtractor() {
       </div>
       {loading && (
         <div className="mt-6">
-          <p>Extracting tables...</p>
+          <progress className="progress progress-info w-56"></progress>
+          <p className="mt-2">Extracting tables...</p>
         </div>
       )}
       {tables.length > 0 && (

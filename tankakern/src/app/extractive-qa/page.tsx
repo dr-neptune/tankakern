@@ -41,6 +41,10 @@ export default function ExtractiveQA() {
   return (
     <div className="p-8 max-w-3xl mx-auto">
       <h1 className="text-4xl font-bold mb-6">Extractive QA</h1>
+      <p className="mb-4 text-lg">
+        This page allows you to extract answers from your PDF document by asking a question.
+        Please ensure the answer exists in the document and is concise (e.g., a number, name, or brief statement).
+      </p>
       <form onSubmit={handleSubmit} className="space-y-6 bg-base-200 p-6 rounded-lg shadow">
         <PdfUpload pdfFile={pdfFile} handleFileChange={handleFileChange} />
         <div>
@@ -62,7 +66,8 @@ export default function ExtractiveQA() {
       </form>
       {loading && (
         <div className="mt-6">
-          <p>Processing your query...</p>
+          <progress className="progress progress-info w-56"></progress>
+          <p className="mt-2">Processing your query...</p>
         </div>
       )}
       {result && (
