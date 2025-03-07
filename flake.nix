@@ -39,6 +39,7 @@
             echo "Upgrading pip and installing docling..."
             pip install --upgrade pip
             pip install docling
+	    pip install haystack-ai accelerate "sentence-transformers>=3.0.0" "datasets>=2.6.1"
           else
             echo "Activating existing virtual environment (.venv)"
             source .venv/bin/activate
