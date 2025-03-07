@@ -23,7 +23,7 @@ async def process_extractive_qa(
     
     # Create a document store and index the provided markdown as one document.
     document_store = InMemoryDocumentStore()
-    document = Document(content=markdown, meta={"source": "docling", "split_id": 0})
+    document = Document(content=markdown, meta={"source": "docling", "split_id": 0, "source_id": "docling"})
     model = "sentence-transformers/multi-qa-mpnet-base-dot-v1"
     embedder = SentenceTransformersDocumentEmbedder(model=model)
     writer = DocumentWriter(document_store=document_store)
