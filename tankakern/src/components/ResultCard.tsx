@@ -7,9 +7,14 @@ const renderHighlightedContext = (
   context: string,
   offset: { start: number; end: number }
 ) => {
-  const before = context.slice(0, offset.start);
-  const highlight = context.slice(offset.start, offset.end);
-  const after = context.slice(offset.end);
+  const truncatedContext = context.length > 1500 ? context.slice(0, 1500) : context;
+  const adjustedOffset = {
+    start: Math.min(offset.start, truncatedContext.length),
+    end: Math.min(offset.end, truncatedContext.length)
+  };
+  const before = truncatedContext.slice(0, adjustedOffset.start);
+  const highlight = truncatedContext.slice(adjustedOffset.start, adjustedOffset.end);
+  const after = truncatedContext.slice(adjustedOffset.end);
   const combined = `${before}<mark class="bg-yellow-300 px-1">${highlight}</mark>${after}`;
   return (
     <div className="whitespace-pre-wrap">
