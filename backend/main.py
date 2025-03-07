@@ -2,27 +2,11 @@ from fastapi import FastAPI
 from datetime import datetime, timedelta
 import random
 from data_extraction import router as data_extraction_router
+from routes.performance import router as performance_router
 
 app = FastAPI()
 app.include_router(data_extraction_router, prefix="/data-extraction")
-
-@app.get("/timeseries")
-def get_timeseries():
-    """
-    Return fake time series data as a list of time series, each with timestamp-value pairs.
-    """
-    now = datetime.utcnow()
-    series_labels = ["Series A", "Series B", "Series C"]
-    data = []
-    for label in series_labels:
-        series_data = []
-        # Generate 10 data points spaced 5 minutes apart
-        for i in range(10):
-            timestamp = (now - timedelta(minutes=5 * i)).isoformat() + "Z"
-            value = round(random.uniform(0, 100), 2)
-            series_data.append({"timestamp": timestamp, "value": value})
-        data.append({"name": label, "data": series_data})
-    return {"data": data}
+app.include_router(performance_router, prefix="/performance")
 
 if __name__ == "__main__":
     import uvicorn
