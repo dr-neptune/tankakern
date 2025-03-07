@@ -53,11 +53,19 @@ async def process_extractive_qa(
             "reader": {"query": query, "top_k": 2}
         }
     )
-    # Post-process results: remove full document content and other unneeded details.
+    # Post-process results: retrieve contextual window for each answer and remove unnecessary document details.
+    from haystack.components.retrievers import SentenceWindowRetriever
+    window_retriever = SentenceWindowRetriever(document_store=document_store, window_size=2)
     if "reader" in result and "answers" in result["reader"]:
         for answer in result["reader"]["answers"]:
             if getattr(answer, "document", None):
-                # Convert document to dict if it's not already a dict
+                # Retrieve context window around the matching sentence.
+                context_result = window_retriever.run(retrieved_documents=[answer.document])
+                if "context_windows" in context_result and context_result["context_windows"]:
+                    answer.context = context_result["context_windows"][0]
+                else:
+                    answer.context = ""
+                # Clean document details.
                 if not isinstance(answer.document, dict):
                     doc = answer.document.__dict__
                     for key in ["content", "embedding", "sparse_embedding", "dataframe", "blob"]:

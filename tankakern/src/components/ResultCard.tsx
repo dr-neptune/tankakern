@@ -6,6 +6,7 @@ interface ResultCardProps {
     score: number;
     data: string | null;
     document_offset: { start: number; end: number } | null;
+    context?: string;
   };
 }
 
@@ -19,6 +20,9 @@ export default function ResultCard({ answer }: ResultCardProps) {
           <p>
             Document Offset: {answer.document_offset.start} - {answer.document_offset.end}
           </p>
+        )}
+        {answer.context && (
+          <p className="mt-2"><strong>Context:</strong> {answer.context}</p>
         )}
       </div>
     </div>
