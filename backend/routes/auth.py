@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from sqlmodel import Session, select
 from pydantic import BaseModel
 from models.user import User
-from backend.db.session import get_session
+from db.session import get_session
 from passlib.context import CryptContext
 
 router = APIRouter(tags=["Authentication"])
