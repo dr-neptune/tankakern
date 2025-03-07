@@ -27,6 +27,7 @@ export default function DataExtractionPage() {
     setLoading(true);
     const formData = new FormData();
     formData.append("pdf_file", pdfFile);
+    formData.append("query", description);
     fetch("http://localhost:8000/extractive-qa/process", {
       method: "POST",
       body: formData,
