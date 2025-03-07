@@ -3,7 +3,7 @@ import tempfile
 import os
 from docling.document_converter import DocumentConverter
 
-router = APIRouter()
+router = APIRouter(tags=["Data Extraction"])
 
 @router.post("/")
 async def extract_tables(pdf_file: UploadFile):

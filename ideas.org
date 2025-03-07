@@ -1,3 +1,9 @@
+* <2025-03-07 Fri>
+
+Add data extraction functionality!
+
+Looking good so far.
+
 * <2025-03-04 Tue>
 
 Goals with this app:

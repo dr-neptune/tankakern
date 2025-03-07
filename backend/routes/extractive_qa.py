@@ -7,7 +7,7 @@ from haystack.components.embedders import SentenceTransformersDocumentEmbedder, 
 from haystack.components.writers import DocumentWriter
 from utils.pdf_processing import process_pdf_to_markdown
 
-router = APIRouter(tags=["Extractive QA"])
+router = APIRouter(tags=["Data Extraction"])
 
 @router.post("/process")
 async def process_extractive_qa(
@@ -20,7 +20,7 @@ async def process_extractive_qa(
     indexes the resulting markdown as a single document, and returns the QA results.
     """
     markdown = await process_pdf_to_markdown(pdf_file)
-    
+
     # Create a document store and index the provided markdown as one document.
     document_store = InMemoryDocumentStore()
     document = Document(content=markdown, meta={"source": "docling", "split_id": 0, "source_id": "docling", "split_idx_start": 0})
@@ -38,7 +38,7 @@ async def process_extractive_qa(
     retriever = InMemoryEmbeddingRetriever(document_store=document_store)
     reader = ExtractiveReader(no_answer=True)
     reader.warm_up()
-    
+
     qa_pipeline = Pipeline()
     qa_pipeline.add_component(instance=SentenceTransformersTextEmbedder(model=model), name="text_embedder")
     qa_pipeline.add_component(instance=retriever, name="retriever")
