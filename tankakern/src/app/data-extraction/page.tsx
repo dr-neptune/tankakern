@@ -151,7 +151,7 @@ export default function DataExtractionPage() {
           <h2 className="text-2xl font-bold mb-4">Extracted Tables</h2>
           {extractedTables.map((table, index) => (
             <div key={index} className="mb-4">
-              <h3 className="text-xl mb-2">Table {table.table_index + 1}</h3>
+              <h3 className="text-xl font-semibold mb-2">Table {table.table_index + 1}:</h3>
               <TableViewer markdown={table.markdown} />
             </div>
           ))}
