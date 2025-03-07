@@ -3,6 +3,8 @@ import { useState } from "react";
 import ResultCard from "../../components/ResultCard";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
+import TableViewer from "../../components/TableViewer";
 
 export default function DataExtractionPage() {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
@@ -150,11 +152,7 @@ export default function DataExtractionPage() {
           {extractedTables.map((table, index) => (
             <div key={index} className="mb-4">
               <h3 className="text-xl mb-2">Table {table.table_index + 1}</h3>
-              <div className="markdown-answer">
-                <ReactMarkdown rehypePlugins={[rehypeRaw]}>
-                  {table.markdown}
-                </ReactMarkdown>
-              </div>
+              <TableViewer markdown={table.markdown} />
             </div>
           ))}
         </div>
