@@ -56,9 +56,14 @@ async def process_extractive_qa(
     # Post-process results: remove full document content and other unneeded details.
     if "reader" in result and "answers" in result["reader"]:
         for answer in result["reader"]["answers"]:
-            if answer.get("document"):
-                # Keep only selected keys
-                doc = answer["document"]
-                for key in ["content", "embedding", "sparse_embedding", "dataframe", "blob"]:
-                    doc.pop(key, None)
+            if getattr(answer, "document", None):
+                # Convert document to dict if it's not already a dict
+                if not isinstance(answer.document, dict):
+                    doc = answer.document.__dict__
+                    for key in ["content", "embedding", "sparse_embedding", "dataframe", "blob"]:
+                        doc.pop(key, None)
+                    answer.document = doc
+                else:
+                    for key in ["content", "embedding", "sparse_embedding", "dataframe", "blob"]:
+                        answer.document.pop(key, None)
     return result
