@@ -43,10 +43,26 @@ export default function UserManagement() {
         parsed.username = username;
         parsed.profilePicture = profilePicture;
         localStorage.setItem("user", JSON.stringify(parsed));
-        setMessage("Display name updated.");
+        
+        const res = await fetch("/api/user", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            id: parsed.id,
+            username,
+            profilePicture
+          })
+        });
+        if (!res.ok) {
+          throw new Error("Failed to update database");
+        }
+        
+        setMessage("Display name and profile picture updated.");
       } catch (error) {
         console.error("Error updating user", error);
-        setMessage("Error updating username.");
+        setMessage("Error updating user.");
       }
     }
   };
