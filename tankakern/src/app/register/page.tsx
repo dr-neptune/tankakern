@@ -22,8 +22,8 @@ export default function Register() {
       body: JSON.stringify({ username, email, password }),
     });
     if (res.ok) {
-      const data = await res.json();
-      localStorage.setItem("user", JSON.stringify(data.user));
+      const userData = await res.json();
+      localStorage.setItem("user", JSON.stringify(userData));
       setMessage("Registration successful!");
       router.replace("/");
     } else {
