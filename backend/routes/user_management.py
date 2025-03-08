@@ -5,7 +5,7 @@ from db.session import get_session
 
 router = APIRouter()
 
-@router.post("/user-management/upload-profile-picture")
+@router.post("/upload-profile-picture")
 async def upload_profile_picture(user_id: int = Form(...), file: UploadFile = File(...)):
     if file.content_type not in ["image/jpeg", "image/png"]:
         raise HTTPException(status_code=400, detail="Invalid file type. Only JPEG and PNG are allowed.")
@@ -19,7 +19,7 @@ async def upload_profile_picture(user_id: int = Form(...), file: UploadFile = Fi
     session.commit()
     return {"filename": file.filename, "user_id": user_id}
     
-@router.put("/user-management")
+@router.put("/")
 async def update_user(request: Request, session: Session = Depends(get_session)):
     data = await request.json()
     user_id = data.get("id")
