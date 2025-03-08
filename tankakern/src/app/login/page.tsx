@@ -50,6 +50,9 @@ export default function Login() {
         <button type="submit" className="btn btn-primary">Login</button>
       </form>
       {message && <p className="mt-4">{message}</p>}
+      <p className="mt-4 text-sm">
+        Don't have an account? <a href="/register" className="text-blue-500 underline">Register here</a>.
+      </p>
       <p className="mt-4 text-sm">Don't have an account? <a href="/register" className="text-blue-500 underline">Register here</a>.</p>
       {user && (
         <div className="mt-4">

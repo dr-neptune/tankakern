@@ -68,6 +68,15 @@ export default function Register() {
             className="input input-bordered w-full"
           />
         </div>
+        <div>
+          <label className="block">Confirm Password</label>
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="input input-bordered w-full"
+          />
+        </div>
         <button type="submit" className="btn btn-primary">Register</button>
       </form>
       {message && <p className="mt-4">{message}</p>}
@@ -81,6 +90,7 @@ export default function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
