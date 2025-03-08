@@ -149,7 +149,7 @@ export default function Sidebar() {
         <div className="flex justify-between items-center mt-auto p-2 border-t border-base-300">
           <div className="avatar">
             <div className="w-12 rounded">
-              <img src={user.profilePicture || "/default-avatar.png"} alt="Profile picture" />
+              <img src={user.profilePicture ? (user.profilePicture.startsWith("http") ? user.profilePicture : `http://localhost:8000/${user.profilePicture}`) : "/default-avatar.png"} alt="Profile picture" />
             </div>
           </div>
           <div>
