@@ -32,4 +32,5 @@ async def update_user(request: Request, session: Session = Depends(get_session))
     user.profile_picture = data.get("profilePicture", user.profile_picture)
     session.add(user)
     session.commit()
+    session.refresh(user)
     return {"msg": "User updated."}
