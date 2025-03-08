@@ -146,7 +146,7 @@ export default function Sidebar() {
         </li>
       </ul>
       {user && (
-        <div className="dock dock-md dock-bottom fixed bottom-0 left-0 right-0 bg-base-200">
+        <div className="dock dock-md dock-bottom bg-base-200">
           <div className="dock-item">
             <div className="avatar">
               <div className="w-12 rounded">
