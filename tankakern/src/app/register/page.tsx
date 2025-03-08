@@ -5,10 +5,15 @@ export default function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      setMessage("Error: Passwords do not match");
+      return;
+    }
     const res = await fetch("http://localhost:8000/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -51,6 +56,15 @@ export default function Register() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="input input-bordered w-full"
+          />
+        </div>
+        <div>
+          <label className="block">Confirm Password</label>
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             className="input input-bordered w-full"
           />
         </div>
