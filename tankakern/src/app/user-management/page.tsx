@@ -68,7 +68,7 @@ export default function UserManagement() {
           <label className="block">Profile Picture</label>
           <div className="flex items-center gap-4">
             <div className="avatar">
-              <div className="w-24 rounded-full">
+              <div className="w-24 rounded">
                 <img src={profilePicture || "https://placeimg.com/192/192/people"} alt="Profile Picture" />
               </div>
             </div>
