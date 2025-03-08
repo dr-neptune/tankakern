@@ -6,7 +6,9 @@ export default function Sidebar() {
   const [user, setUser] = useState(null);
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
+    if (!storedUser || storedUser === "undefined" || storedUser.trim() === "" || storedUser.trim()[0] !== "{") {
+      setUser(null);
+    } else {
       try {
         const parsedUser = JSON.parse(storedUser);
         setUser(parsedUser);
@@ -152,6 +154,13 @@ export default function Sidebar() {
           >
             Logout
           </button>
+        </div>
+      )}
+      {!user && (
+        <div className="mt-4 text-center">
+          <p className="text-sm">
+            Don't have an account? <Link href="/register" className="text-blue-500 underline">Register here</Link>.
+          </p>
         </div>
       )}
     </aside>
