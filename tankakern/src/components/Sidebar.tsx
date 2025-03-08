@@ -147,15 +147,17 @@ export default function Sidebar() {
       </ul>
       {user && (
         <div className="dock dock-md dock-bottom fixed bottom-0 left-0 right-0 bg-base-200">
-          <div className="flex justify-around items-center w-full py-2">
+          <div className="dock-item">
             <div className="avatar">
               <div className="w-12 rounded">
                 <img src={user.profilePicture || "/default-avatar.png"} alt="Profile picture" />
               </div>
             </div>
-            <span className="text-sm">
-              Logged in as: <Link href="/user-management" className="font-bold text-blue-500 underline">{user.username}</Link>
-            </span>
+          </div>
+          <div className="dock-item">
+            <Link href="/user-management" className="btn btn-ghost">User Management</Link>
+          </div>
+          <div className="dock-item">
             <button
               onClick={() => {
                 localStorage.removeItem("user");
