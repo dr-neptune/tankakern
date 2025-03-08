@@ -154,7 +154,7 @@ export default function Sidebar() {
           </div>
           <div>
             <Link href="/user-management" className="text-sm font-bold text-blue-500 underline">
-              User Management
+              {user.username}
             </Link>
           </div>
           <div className="tooltip tooltip-top" data-tip="Logout">
