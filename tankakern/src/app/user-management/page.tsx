@@ -50,7 +50,7 @@ export default function UserManagement() {
         formData.append("user_id", parsed.id.toString());
         formData.append("file", selectedFile);
   
-        const res = await fetch("/user-management/upload-profile-picture", {
+        const res = await fetch("http://localhost:8000/user-management/upload-profile-picture", {
           method: "POST",
           body: formData
         });
