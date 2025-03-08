@@ -15,8 +15,15 @@ export default function ExtractiveQA() {
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    if (!storedUser || storedUser === "undefined" || storedUser.trim()[0] !== "{") {
+      setUser(null);
+    } else {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error("Error parsing user from localStorage", error);
+        setUser(null);
+      }
     }
   }, []);
 
