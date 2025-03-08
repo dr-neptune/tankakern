@@ -1,4 +1,5 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form, Request, Depends
+import os
 from sqlmodel import Session
 from models.user import User
 from db.session import get_session
@@ -9,7 +10,10 @@ router = APIRouter()
 async def upload_profile_picture(user_id: int = Form(...), file: UploadFile = File(...)):
     if file.content_type not in ["image/jpeg", "image/png"]:
         raise HTTPException(status_code=400, detail="Invalid file type. Only JPEG and PNG are allowed.")
-    file_location = f"uploads/{file.filename}"
+    uploads_dir = "uploads"
+    if not os.path.exists(uploads_dir):
+        os.makedirs(uploads_dir)
+    file_location = os.path.join(uploads_dir, file.filename)
     session = next(get_session())
     user = session.get(User, user_id)
     if not user:
