@@ -53,6 +53,9 @@ export default function Login() {
       <p className="mt-4 text-sm">
         Don't have an account? <a href="/register" className="text-blue-500 underline">Register here</a>.
       </p>
+      <p className="mt-4 text-sm">
+        Don't have an account? <a href="/register" className="text-blue-500 underline">Register here</a>.
+      </p>
       <p className="mt-4 text-sm">Don't have an account? <a href="/register" className="text-blue-500 underline">Register here</a>.</p>
       {user && (
         <div className="mt-4">
