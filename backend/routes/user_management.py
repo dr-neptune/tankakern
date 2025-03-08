@@ -15,22 +15,10 @@ async def upload_profile_picture(user_id: int = Form(...), file: UploadFile = Fi
     if not user:
         raise HTTPException(status_code=404, detail="User not found.")
     user.profile_picture = file_location
+    content = await file.read()
+    with open(file_location, "wb") as f:
+         f.write(content)
     session.add(user)
     session.commit()
     return {"filename": file.filename, "user_id": user_id}
     
-@router.put("/")
-async def update_user(request: Request, session: Session = Depends(get_session)):
-    data = await request.json()
-    user_id = data.get("id")
-    if not user_id:
-        raise HTTPException(status_code=400, detail="Missing user id.")
-    user = session.get(User, user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found.")
-    user.displayname = data.get("displayname", user.displayname)
-    user.profile_picture = data.get("profilePicture", user.profile_picture)
-    session.add(user)
-    session.commit()
-    session.refresh(user)
-    return {"msg": "User updated."}
