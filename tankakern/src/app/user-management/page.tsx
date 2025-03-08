@@ -45,7 +45,7 @@ export default function UserManagement() {
         localStorage.setItem("user", JSON.stringify(parsed));
         
         const res = await fetch("/api/user_management", {
-          method: "PUT",
+          method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
