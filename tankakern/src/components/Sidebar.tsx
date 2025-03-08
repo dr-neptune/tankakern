@@ -152,11 +152,6 @@ export default function Sidebar() {
               <img src={user.profilePicture || "/default-avatar.png"} alt="Profile picture" />
             </div>
           </div>
-          <div>
-            <Link href="/user-management" className="text-sm font-bold text-blue-500 underline">
-              {user.username}
-            </Link>
-          </div>
           <div className="tooltip tooltip-top" data-tip="Logout">
             <button
               onClick={() => {
