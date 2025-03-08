@@ -6,6 +6,18 @@ export default function UserManagement() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [message, setMessage] = useState("");
+  const [profilePicture, setProfilePicture] = useState<string | null>(null);
+
+  const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfilePicture(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -13,6 +25,9 @@ export default function UserManagement() {
       try {
         const parsed = JSON.parse(storedUser);
         setUsername(parsed.username ?? "");
+        if (parsed.profilePicture) {
+          setProfilePicture(parsed.profilePicture);
+        }
       } catch (error) {
         console.error("Error parsing user", error);
       }
@@ -26,6 +41,7 @@ export default function UserManagement() {
       try {
         const parsed = JSON.parse(storedUser);
         parsed.username = username;
+        parsed.profilePicture = profilePicture;
         localStorage.setItem("user", JSON.stringify(parsed));
         setMessage("Display name updated.");
       } catch (error) {
@@ -47,6 +63,17 @@ export default function UserManagement() {
             onChange={(e) => setUsername(e.target.value)}
             className="input input-bordered w-full"
           />
+        </div>
+        <div>
+          <label className="block">Profile Picture</label>
+          <div className="flex items-center gap-4">
+            <div className="avatar">
+              <div className="w-24 rounded-full">
+                <img src={profilePicture || "https://placeimg.com/192/192/people"} alt="Profile Picture" />
+              </div>
+            </div>
+            <input type="file" accept="image/*" onChange={handleProfilePictureChange} className="file-input file-input-bordered w-full max-w-xs" />
+          </div>
         </div>
         <button type="submit" className="btn btn-primary">Update Display Name</button>
       </form>
