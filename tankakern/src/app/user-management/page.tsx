@@ -7,10 +7,12 @@ export default function UserManagement() {
   const [username, setUsername] = useState("");
   const [message, setMessage] = useState("");
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfilePicture(reader.result as string);
@@ -36,34 +38,34 @@ export default function UserManagement() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!selectedFile) {
+      setMessage("No file selected.");
+      return;
+    }
     const storedUser = localStorage.getItem("user");
     if (storedUser && storedUser !== "undefined" && storedUser.trim() !== "") {
       try {
         const parsed = JSON.parse(storedUser);
-        parsed.username = username;
-        parsed.profilePicture = profilePicture;
-        localStorage.setItem("user", JSON.stringify(parsed));
-        
-        const res = await fetch("/user-management", {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            id: parsed.id,
-            displayname: username,
-            profilePicture
-          })
+        const formData = new FormData();
+        formData.append("user_id", parsed.id.toString());
+        formData.append("file", selectedFile);
+  
+        const res = await fetch("/user-management/upload-profile-picture", {
+          method: "POST",
+          body: formData
         });
         if (!res.ok) {
           const errorText = await res.text();
-          throw new Error("Failed to update database: " + errorText);
+          throw new Error("Failed to update profile picture: " + errorText);
         }
-        
-        setMessage("Display name and profile picture updated.");
+        const data = await res.json();
+        // Optionally update user's profilePicture in local storage based on response
+        parsed.profilePicture = data.filename;
+        localStorage.setItem("user", JSON.stringify(parsed));
+        setMessage("Profile picture updated.");
       } catch (error) {
-        console.error("Error updating user", error);
-        setMessage("Error updating user.");
+        console.error("Error updating profile picture", error);
+        setMessage("Error updating profile picture.");
       }
     }
   };
