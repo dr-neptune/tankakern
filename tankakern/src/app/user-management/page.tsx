@@ -56,7 +56,8 @@ export default function UserManagement() {
           })
         });
         if (!res.ok) {
-          throw new Error("Failed to update database");
+          const errorText = await res.text();
+          throw new Error("Failed to update database: " + errorText);
         }
         
         setMessage("Display name and profile picture updated.");
