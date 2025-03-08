@@ -28,7 +28,7 @@ async def update_user(request: Request, session: Session = Depends(get_session))
     user = session.get(User, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found.")
-    user.displayname = data.get("username", user.displayname)
+    user.displayname = data.get("displayname", user.displayname)
     user.profile_picture = data.get("profilePicture", user.profile_picture)
     session.add(user)
     session.commit()

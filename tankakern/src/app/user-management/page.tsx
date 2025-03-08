@@ -51,7 +51,7 @@ export default function UserManagement() {
           },
           body: JSON.stringify({
             id: parsed.id,
-            username,
+            displayname: username,
             profilePicture
           })
         });
