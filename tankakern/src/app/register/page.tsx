@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,7 +23,9 @@ export default function Register() {
     });
     if (res.ok) {
       const data = await res.json();
-      setMessage("Registration successful! You can now log in.");
+      localStorage.setItem("user", JSON.stringify(data.user));
+      setMessage("Registration successful!");
+      router.replace("/");
     } else {
       const error = await res.json();
       setMessage("Error: " + error.detail);
