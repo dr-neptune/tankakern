@@ -143,6 +143,15 @@ export default function Sidebar() {
           <p className="text-sm">
             Logged in as: <span className="font-bold">{user.username}</span>
           </p>
+          <button
+            onClick={() => {
+              localStorage.removeItem("user");
+              window.location.href = "/login";
+            }}
+            className="btn btn-sm btn-secondary mt-2"
+          >
+            Logout
+          </button>
         </div>
       )}
     </aside>
