@@ -148,7 +148,7 @@ export default function Sidebar() {
       {user && (
         <div className="mt-4 text-center">
           <div className="avatar mx-auto mb-2">
-            <div className="w-12 rounded-full">
+            <div className="w-12 rounded">
               <img src={user.profilePicture || "/default-avatar.png"} alt="Profile picture" />
             </div>
           </div>
