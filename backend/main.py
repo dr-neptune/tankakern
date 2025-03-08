@@ -14,7 +14,7 @@ app.include_router(performance_router, prefix="/performance")
 app.include_router(extractive_qa_router, prefix="/data-extraction/process")
 app.include_router(extract_tables_router, prefix="/data-extraction/tables")
 app.include_router(auth_router, prefix="/auth")
-app.include_router(user_management_router, prefix="/user-management")
+app.include_router(user_management_router, prefix="/api/user-management")
 
 if __name__ == "__main__":
     import uvicorn
