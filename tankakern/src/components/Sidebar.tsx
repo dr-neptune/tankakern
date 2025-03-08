@@ -24,7 +24,7 @@ export default function Sidebar() {
     return () => clearInterval(interval);
   }, []);
   return (
-    <aside className="menu w-64 p-4 bg-base-100 text-base-content">
+    <aside className="menu w-64 p-4 bg-base-100 text-base-content flex flex-col h-screen">
       <div className="mb-4">
         <Link href="/">
           <button className="btn btn-ghost text-pink-500 hover:text-pink-600 flex items-center gap-2">
@@ -146,7 +146,7 @@ export default function Sidebar() {
         </li>
       </ul>
       {user && (
-        <div className="flex justify-between items-center mt-4 p-2 border-t border-base-300">
+        <div className="flex justify-between items-center mt-auto p-2 border-t border-base-300">
           <div className="avatar">
             <div className="w-12 rounded">
               <img src={user.profilePicture || "/default-avatar.png"} alt="Profile picture" />
@@ -163,10 +163,10 @@ export default function Sidebar() {
                 localStorage.removeItem("user");
                 window.location.href = "/login";
               }}
-              className="btn btn-error btn-sm"
+              className="btn btn-ghost"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7" />
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M7 2h10a1 1 0 011 1v18a1 1 0 01-1 1H7a1 1 0 01-1-1V3a1 1 0 011-1zm3 12a2 2 0 104 0 2 2 0 00-4 0z" />
               </svg>
             </button>
           </div>
