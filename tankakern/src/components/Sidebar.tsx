@@ -5,18 +5,23 @@ import Link from "next/link";
 export default function Sidebar() {
   const [user, setUser] = useState(null);
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (!storedUser || storedUser === "undefined" || storedUser.trim() === "" || storedUser.trim()[0] !== "{") {
-      setUser(null);
-    } else {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
-      } catch (error) {
-        console.error("Failed to parse user from localStorage", error);
+    const updateUser = () => {
+      const storedUser = localStorage.getItem("user");
+      if (!storedUser || storedUser === "undefined" || storedUser.trim() === "" || storedUser.trim()[0] !== "{") {
         setUser(null);
+      } else {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          setUser(parsedUser);
+        } catch (error) {
+          console.error("Failed to parse user from localStorage", error);
+          setUser(null);
+        }
       }
-    }
+    };
+    updateUser();
+    const interval = setInterval(updateUser, 1000);
+    return () => clearInterval(interval);
   }, []);
   return (
     <aside className="menu w-64 p-4 bg-base-100 text-base-content">
