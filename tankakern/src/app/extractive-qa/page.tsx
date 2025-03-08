@@ -8,13 +8,34 @@ export default function ExtractiveQA() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [user, setUser] = useState<any>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loginMessage, setLoginMessage] = useState("");
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (!storedUser) {
-      alert("You must be logged in to use this feature. Please register or log in.");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
     }
   }, []);
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const res = await fetch("http://localhost:8000/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setUser(data.user);
+      localStorage.setItem("user", JSON.stringify(data.user));
+    } else {
+      const error = await res.json();
+      setLoginMessage("Error: " + error.detail);
+    }
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -45,6 +66,35 @@ export default function ExtractiveQA() {
     setLoading(false);
   };
 
+  if (!user) {
+    return (
+      <div className="p-8 max-w-md mx-auto">
+        <h1 className="text-3xl font-bold mb-4">Login Required</h1>
+        <form className="space-y-4" onSubmit={handleLogin}>
+          <div>
+            <label className="block">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="input input-bordered w-full"
+            />
+          </div>
+          <div>
+            <label className="block">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="input input-bordered w-full"
+            />
+          </div>
+          <button type="submit" className="btn btn-primary">Login</button>
+        </form>
+        {loginMessage && <p className="mt-4">{loginMessage}</p>}
+      </div>
+    );
+  }
   return (
     <div className="p-8 max-w-3xl mx-auto">
       <h1 className="text-4xl font-bold mb-6">Extractive QA</h1>
