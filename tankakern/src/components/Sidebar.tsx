@@ -146,26 +146,28 @@ export default function Sidebar() {
         </li>
       </ul>
       {user && (
-        <div className="dock dock-md dock-bottom bg-base-200">
-          <div className="dock-item">
-            <div className="avatar">
-              <div className="w-12 rounded">
-                <img src={user.profilePicture || "/default-avatar.png"} alt="Profile picture" />
-              </div>
+        <div className="flex justify-between items-center mt-4 p-2 border-t border-base-300">
+          <div className="avatar">
+            <div className="w-12 rounded">
+              <img src={user.profilePicture || "/default-avatar.png"} alt="Profile picture" />
             </div>
           </div>
-          <div className="dock-item">
-            <Link href="/user-management" className="btn btn-ghost">User Management</Link>
+          <div>
+            <Link href="/user-management" className="text-sm font-bold text-blue-500 underline">
+              {user.username}
+            </Link>
           </div>
-          <div className="dock-item">
+          <div>
             <button
               onClick={() => {
                 localStorage.removeItem("user");
                 window.location.href = "/login";
               }}
-              className="btn btn-sm btn-secondary"
+              className="btn btn-ghost"
             >
-              Logout
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7" />
+              </svg>
             </button>
           </div>
         </div>
