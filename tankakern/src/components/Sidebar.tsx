@@ -148,7 +148,7 @@ export default function Sidebar() {
       {user && (
         <div className="mt-4 text-center">
           <p className="text-sm">
-            Logged in as: <span className="font-bold">{user.username}</span>
+            Logged in as: <Link href="/user-management" className="font-bold text-blue-500 underline">{user.username}</Link>
           </p>
           <button
             onClick={() => {
