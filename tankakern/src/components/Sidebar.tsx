@@ -157,15 +157,15 @@ export default function Sidebar() {
               {user.username}
             </Link>
           </div>
-          <div>
+          <div className="tooltip tooltip-top" data-tip="Logout">
             <button
               onClick={() => {
                 localStorage.removeItem("user");
                 window.location.href = "/login";
               }}
-              className="btn btn-ghost"
+              className="btn btn-error btn-sm"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7" />
               </svg>
             </button>
