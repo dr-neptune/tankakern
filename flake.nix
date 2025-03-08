@@ -30,6 +30,7 @@
           pkgs.python312Packages.ipython
 	  pkgs.python312Packages.sqlmodel
 	  pkgs.python312Packages.alembic
+	  pkgs.python312Packages.passlib
         ];
 
         shellHook = ''

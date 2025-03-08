@@ -4,6 +4,8 @@ Add data extraction functionality!
 
 Looking good so far.
 
+currently midway through adding a simple user system
+
 * <2025-03-04 Tue>
 
 Goals with this app:

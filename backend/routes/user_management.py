@@ -1,7 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form
 from sqlmodel import Session
-from backend.models.user import User
-from backend.db.session import get_session
+from models.user import User
+from db.session import get_session
 
 router = APIRouter()
 
