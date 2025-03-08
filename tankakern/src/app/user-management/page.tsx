@@ -44,7 +44,7 @@ export default function UserManagement() {
         parsed.profilePicture = profilePicture;
         localStorage.setItem("user", JSON.stringify(parsed));
         
-        const res = await fetch("/api/user-management", {
+        const res = await fetch("/user-management", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json"
