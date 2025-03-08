@@ -8,7 +8,7 @@ export default function Home() {
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (!storedUser) {
+    if (!storedUser || storedUser === "undefined") {
       router.replace("/login");
     } else {
       if (storedUser.trim()[0] !== '{') {
