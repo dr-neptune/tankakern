@@ -147,6 +147,11 @@ export default function Sidebar() {
       </ul>
       {user && (
         <div className="mt-4 text-center">
+          <div className="avatar mx-auto mb-2">
+            <div className="w-12 rounded-full">
+              <img src={user.profilePicture || "/default-avatar.png"} alt="Profile picture" />
+            </div>
+          </div>
           <p className="text-sm">
             Logged in as: <Link href="/user-management" className="font-bold text-blue-500 underline">{user.username}</Link>
           </p>
