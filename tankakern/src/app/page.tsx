@@ -1,4 +1,16 @@
+"use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!localStorage.getItem("user")) {
+      router.replace("/login");
+    }
+  }, [router]);
+
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content text-center">
