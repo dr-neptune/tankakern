@@ -15,6 +15,8 @@ export default function Home() {
         setUser(JSON.parse(storedUser));
       } catch (error) {
         console.error("Error parsing user from localStorage", error);
+        localStorage.removeItem("user");
+        router.replace("/login");
       }
     }
   }, [router]);
