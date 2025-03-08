@@ -11,12 +11,18 @@ export default function Home() {
     if (!storedUser) {
       router.replace("/login");
     } else {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error("Error parsing user from localStorage", error);
+      if (storedUser.trim()[0] !== '{') {
+        console.error("Invalid user data in localStorage", storedUser);
         localStorage.removeItem("user");
         router.replace("/login");
+      } else {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch (error) {
+          console.error("Error parsing user from localStorage", error);
+          localStorage.removeItem("user");
+          router.replace("/login");
+        }
       }
     }
   }, [router]);
