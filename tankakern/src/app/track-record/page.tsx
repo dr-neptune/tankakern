@@ -75,33 +75,28 @@ export default function TrackRecordPage() {
       header: "Net IRR",
       accessorKey: "net_irr",
       cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
-      enableColumnFilter: true,
       enableSorting: true,
     },
     {
       header: "Net DPI",
       accessorKey: "net_dpi",
       cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
-      enableColumnFilter: true,
       enableSorting: true,
     },
     {
       header: "Net TVPI",
       accessorKey: "net_tvpi",
       cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
-      enableColumnFilter: true,
       enableSorting: true,
     },
     {
       header: "Stage",
       accessorKey: "stage",
-      enableColumnFilter: true,
       enableSorting: true,
     },
     {
       header: "Geo",
       accessorKey: "geo",
-      enableColumnFilter: true,
       enableSorting: true,
     },
   ];
@@ -110,71 +105,62 @@ export default function TrackRecordPage() {
     {
       header: "Fund Name",
       accessorKey: "fund_name",
-      enableColumnFilter: true,
+      enableSorting: true,
     },
     {
       header: "GP Name",
       accessorKey: "gp_name",
-      enableColumnFilter: true,
+      enableSorting: true,
     },
     {
       header: "Company",
       accessorKey: "company_name",
-      enableColumnFilter: true,
       enableSorting: true,
     },
     {
       header: "Stage",
       accessorKey: "stage",
-      enableColumnFilter: true,
       enableSorting: true,
     },
     {
       header: "Geo",
       accessorKey: "geo",
-      enableColumnFilter: true,
       enableSorting: true,
     },
     {
       header: "Total Value",
       accessorKey: "total_value",
       cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
-      enableColumnFilter: true,
       enableSorting: true,
     },
     {
       header: "Total Cost",
       accessorKey: "total_cost",
       cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
-      enableColumnFilter: true,
       enableSorting: true,
     },
     {
       header: "Realized Value",
       accessorKey: "realized_value",
       cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
-      enableColumnFilter: true,
       enableSorting: true,
     },
     {
       header: "Realized Cost",
       accessorKey: "realized_cost",
       cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
-      enableColumnFilter: true,
       enableSorting: true,
     },
     {
       header: "TV/TC",
       accessorKey: "tv_tc",
       cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
-      enableColumnFilter: true,
       enableSorting: true,
     },
     {
       header: "Realized?",
       accessorKey: "realized",
       cell: (info) => (info.getValue() ? "Yes" : "No"),
-      enableColumnFilter: true,
       enableSorting: true,
     },
   ];
@@ -183,49 +169,42 @@ export default function TrackRecordPage() {
     {
       header: "Fund Name",
       accessorKey: "fund_name",
-      enableColumnFilter: true,
       enableSorting: true,
     },
     {
       header: "GP Name",
       accessorKey: "gp_name",
-      enableColumnFilter: true,
       enableSorting: true,
     },
     {
       header: "Date",
       accessorKey: "date",
-      enableColumnFilter: true,
       enableSorting: true,
     },
     {
       header: "Amount (Millions)",
       accessorKey: "amount_millions",
       cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
-      enableColumnFilter: true,
       enableSorting: true,
     },
     {
       header: "Type",
       accessorKey: "type",
-      enableColumnFilter: true,
       enableSorting: true,
     },
   ];
 
   // -----------------------------------
-  // Chart Data
+  // Chart Data: Individual Cash Flows
   // -----------------------------------
   let plotData: any[] = [];
   let layout: any = {};
 
   if (selectedFund && selectedCF.length > 0) {
-    // Sort by date to ensure the lines are consistent
     const sortedCF = [...selectedCF].sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
 
-    // Separate calls vs distributions
     const callData = sortedCF.filter((flow) => flow.type === "Call");
     const distData = sortedCF.filter((flow) => flow.type === "Distribution");
 
@@ -257,14 +236,16 @@ export default function TrackRecordPage() {
       legend: {
         orientation: "h",
         yanchor: "top",
-        y: -0.2, // place the legend just below the chart
+        y: -0.2,
         xanchor: "center",
         x: 0.5,
       },
     };
   }
 
-  // Cumulative Chart
+  // -----------------------------------
+  // Chart Data: Cumulative Cash Flow
+  // -----------------------------------
   let cumulativePlotData: any[] = [];
   let cumulativeLayout: any = {};
 
@@ -305,7 +286,6 @@ export default function TrackRecordPage() {
       xVals.push(cf.date);
       cumVal += cf.amount_millions;
       yVals.push(cumVal);
-
       if (cf.type === "Call") {
         markerColors.push(daisyNightTheme.layout.colorway[0]);
         callsLegendTrace.x.push(cf.date);
@@ -406,8 +386,6 @@ export default function TrackRecordPage() {
             columns={fundColumns}
             data={funds}
             enableSorting
-            enableGlobalFilter
-            enableColumnFilters
           />
         </div>
       )}
@@ -436,8 +414,6 @@ export default function TrackRecordPage() {
                 columns={dealColumns}
                 data={selectedDeals}
                 enableSorting
-                enableGlobalFilter
-                enableColumnFilters
               />
 
               {/* Charts: Cash Flow (left) and Cumulative Cash Flow (right) with Titles */}
@@ -470,8 +446,6 @@ export default function TrackRecordPage() {
                 columns={cfColumns}
                 data={selectedCF}
                 enableSorting
-                enableGlobalFilter
-                enableColumnFilters
               />
             </div>
           )}

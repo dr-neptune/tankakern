@@ -1,7 +1,8 @@
 export const daisyNightTheme = {
   layout: {
-    paper_bgcolor: "#1a1a1a", // dark background matching daisyUI night theme
-    plot_bgcolor: "#1a1a1a",
+    // Updated background colors to use the CSS variable
+    paper_bgcolor: "#191e24",
+    plot_bgcolor: "#191e24",
     font: {
       color: "#d9d9d9",
     },
