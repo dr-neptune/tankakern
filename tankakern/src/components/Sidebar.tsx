@@ -5,16 +5,22 @@ import Link from "next/link";
 export default function Sidebar() {
   const [user, setUser] = useState(null);
   useEffect(() => {
-    const updateUser = () => {
+    const updateUser = async () => {
       const storedUser = localStorage.getItem("user");
       if (!storedUser || storedUser === "undefined" || storedUser.trim() === "" || storedUser.trim()[0] !== "{") {
         setUser(null);
       } else {
         try {
           const parsedUser = JSON.parse(storedUser);
-          setUser(parsedUser);
+          const res = await fetch(`http://localhost:8000/user-management/${parsedUser.id}`);
+          if (res.ok) {
+            const data = await res.json();
+            setUser(data);
+          } else {
+            setUser(parsedUser);
+          }
         } catch (error) {
-          console.error("Failed to parse user from localStorage", error);
+          console.error("Failed to fetch user from backend", error);
           setUser(null);
         }
       }

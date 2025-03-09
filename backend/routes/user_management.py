@@ -25,4 +25,11 @@ async def upload_profile_picture(user_id: int = Form(...), file: UploadFile = Fi
     session.add(user)
     session.commit()
     return {"filename": file.filename, "user_id": user_id}
+
+@router.get("/{user_id}")
+async def get_user(user_id: int, session: Session = Depends(get_session)):
+    user = session.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+    return user
     
