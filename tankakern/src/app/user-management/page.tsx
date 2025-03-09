@@ -22,18 +22,26 @@ export default function UserManagement() {
   };
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser && storedUser !== "undefined" && storedUser.trim() !== "") {
-      try {
-        const parsed = JSON.parse(storedUser);
-        setUsername(parsed.username ?? "");
-        if (parsed.profilePicture) {
-          setProfilePicture(parsed.profilePicture);
+    const updateUser = async () => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser && storedUser !== "undefined" && storedUser.trim() !== "") {
+        try {
+          const parsed = JSON.parse(storedUser);
+          const res = await fetch(`http://localhost:8000/user-management/${parsed.id}`);
+          if (res.ok) {
+            const data = await res.json();
+            setUsername(data.username);
+            setProfilePicture(data.profile_picture);
+            localStorage.setItem("user", JSON.stringify(data));
+          } else {
+            console.error("Failed to fetch user from backend");
+          }
+        } catch (error) {
+          console.error("Error updating user from backend", error);
         }
-      } catch (error) {
-        console.error("Error parsing user", error);
       }
-    }
+    };
+    updateUser();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
