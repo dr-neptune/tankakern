@@ -1,0 +1,6 @@
+Hi GPT! I'm going to give you a prompt and some code files in the
+following form:
+
+* FILE: /path/to/file
+
+#+BEGIN_SRC

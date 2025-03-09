@@ -9,6 +9,10 @@ from routes.extract_tables import router as extract_tables_router
 from routes.auth import router as auth_router
 from routes.user_management import router as user_management_router
 
+# >>> NEW IMPORT
+from routes.track_record import router as track_record_router
+# <<< NEW IMPORT
+
 app = FastAPI()
 
 # Mount the uploads directory to serve static files
@@ -20,6 +24,10 @@ app.include_router(extractive_qa_router, prefix="/data-extraction/process")
 app.include_router(extract_tables_router, prefix="/data-extraction/tables")
 app.include_router(auth_router, prefix="/auth")
 app.include_router(user_management_router, prefix="/user-management")
+
+# >>> NEW ROUTER
+app.include_router(track_record_router, prefix="/track-record")
+# <<< NEW ROUTER
 
 if __name__ == "__main__":
     import uvicorn
