@@ -88,9 +88,14 @@ export default function DataExtractionPage() {
       </p>
       <form onSubmit={handleSubmit} className="space-y-6 bg-base-200 p-6 rounded-lg shadow">
         <div>
-          <label htmlFor="pdf-upload" className="block text-sm font-medium text-gray-700">
-            PDF Document
-          </label>
+          <div className="flex items-center gap-1">
+            <label htmlFor="pdf-upload" className="block text-sm font-medium text-gray-700">
+              PDF Document
+            </label>
+            <div className="tooltip tooltip-top" data-tip="Select the PDF file to process">
+              <span className="cursor-pointer text-secondary">?</span>
+            </div>
+          </div>
           <input
             type="file"
             id="pdf-upload"
@@ -105,9 +110,14 @@ export default function DataExtractionPage() {
           )}
         </div>
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-            Enter your question:
-          </label>
+          <div className="flex items-center gap-1">
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+              Enter your question:
+            </label>
+            <div className="tooltip tooltip-top" data-tip="Specify the question for data extraction">
+              <span className="cursor-pointer text-secondary">?</span>
+            </div>
+          </div>
           <textarea
             id="description"
             rows={4}

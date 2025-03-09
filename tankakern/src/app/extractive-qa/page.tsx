@@ -79,7 +79,12 @@ export default function ExtractiveQA() {
         <h1 className="text-3xl font-bold mb-4">Login Required</h1>
         <form className="space-y-4" onSubmit={handleLogin}>
           <div>
-            <label className="block">Email</label>
+            <div className="flex items-center gap-1">
+              <label className="block">Email</label>
+              <div className="tooltip tooltip-top" data-tip="Your registered email">
+                <span className="cursor-pointer text-secondary">?</span>
+              </div>
+            </div>
             <input
               type="email"
               value={email}
@@ -88,7 +93,12 @@ export default function ExtractiveQA() {
             />
           </div>
           <div>
-            <label className="block">Password</label>
+            <div className="flex items-center gap-1">
+              <label className="block">Password</label>
+              <div className="tooltip tooltip-top" data-tip="Your account password">
+                <span className="cursor-pointer text-secondary">?</span>
+              </div>
+            </div>
             <input
               type="password"
               value={password}
@@ -112,9 +122,14 @@ export default function ExtractiveQA() {
       <form onSubmit={handleSubmit} className="space-y-6 bg-base-200 p-6 rounded-lg shadow">
         <PdfUpload pdfFile={pdfFile} handleFileChange={handleFileChange} />
         <div>
-          <label htmlFor="query" className="block text-sm font-medium text-gray-700">
-            Enter your question:
-          </label>
+          <div className="flex items-center gap-1">
+            <label htmlFor="query" className="block text-sm font-medium text-gray-700">
+              Enter your question:
+            </label>
+            <div className="tooltip tooltip-top" data-tip="The question you want to ask about the document">
+              <span className="cursor-pointer text-secondary">?</span>
+            </div>
+          </div>
           <textarea
             id="query"
             value={query}
