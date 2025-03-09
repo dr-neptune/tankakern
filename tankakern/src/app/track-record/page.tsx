@@ -404,18 +404,6 @@ export default function TrackRecordPage() {
           </div>
           {selectedFund && (
             <div>
-              {/* Projection toggle */}
-              <div className="form-control flex-row items-center mb-4 gap-2">
-                <label className="cursor-pointer label">
-                  <span className="label-text">Project Future Cash Flows?</span>
-                </label>
-                <input
-                  type="checkbox"
-                  className="toggle toggle-primary"
-                  checked={showProjection}
-                  onChange={() => setShowProjection((prev) => !prev)}
-                />
-              </div>
               <h3 className="text-lg font-semibold mb-2">Deals for {selectedFund.fund_name}</h3>
               <DataTable columns={dealColumns} data={selectedDeals} enableSorting />
               {(actualCF.length > 0 || projCF.length > 0) && (
@@ -439,7 +427,20 @@ export default function TrackRecordPage() {
                     />
                   </div>
                 </div>
+
               )}
+	      {/* Projection toggle */}
+	      <div className="form-control flex-row items-center mb-4 gap-4">
+                <label className="cursor-pointer label">
+		  <span className="label-text">Project Future Cash Flows?</span>
+                </label>
+                <input
+		  type="checkbox"
+		  className="toggle toggle-primary"
+		  checked={showProjection}
+		  onChange={() => setShowProjection((prev) => !prev)}
+                />
+	      </div>
               <h3 className="text-lg font-semibold mt-6 mb-2">Cash Flows for {selectedFund.fund_name}</h3>
               <DataTable columns={cfColumns} data={[...actualCF, ...projCF.map((p: any) => ({ fund_name: selectedFund.fund_name, gp_name: selectedFund.gp_name, ...p }))]} enableSorting />
             </div>

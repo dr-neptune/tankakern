@@ -24,14 +24,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="night">
+    <html lang="en" data-theme="night" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
       >
-        {/* Main wrapper using DaisyUI-friendly classes */}
-        <div className="flex min-h-screen bg-base-200">
+        {/*
+          Main wrapper using DaisyUI / Tailwind classes.
+          We ensure the container is at least the full viewport height (min-h-screen).
+          Then we make the container a flex layout, with the sidebar pinned on the left
+          and the main content scrollable.
+        */}
+        <div className="flex min-h-screen h-full bg-base-200">
           <Sidebar />
-          <main className="flex-grow p-4">{children}</main>
+          <main className="flex-1 overflow-x-hidden overflow-y-auto p-4">
+            {children}
+          </main>
         </div>
       </body>
     </html>
