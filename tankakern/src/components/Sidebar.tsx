@@ -4,6 +4,7 @@ import Link from "next/link";
 
 export default function Sidebar() {
   const [user, setUser] = useState<any>(null);
+
   useEffect(() => {
     const updateUser = async () => {
       const storedUser = localStorage.getItem("user");
@@ -17,6 +18,7 @@ export default function Sidebar() {
             const data = await res.json();
             setUser(data);
           } else {
+            // Fallback if the user can't be fetched again
             setUser(parsedUser);
           }
         } catch (error) {
@@ -170,7 +172,7 @@ export default function Sidebar() {
           </div>
           <div>
             <Link href="/user-management" className="text-sm font-bold text-blue-500 underline">
-              {user.username}
+              {user.displayname || user.username}
             </Link>
           </div>
           <div className="tooltip tooltip-top" data-tip="Logout">

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 
 export default function UserManagement() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [message, setMessage] = useState("");
   const [profilePicture, setProfilePicture] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -30,7 +30,7 @@ export default function UserManagement() {
           const res = await fetch(`http://localhost:8000/user-management/${parsed.id}`);
           if (res.ok) {
             const data = await res.json();
-            setUsername(data.username);
+            setDisplayName(data.displayname || ""); // <-- Load displayName
             setProfilePicture(data.profile_picture);
             localStorage.setItem("user", JSON.stringify(data));
           } else {
@@ -46,35 +46,38 @@ export default function UserManagement() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!selectedFile) {
-      setMessage("No file selected.");
-      return;
-    }
+
+    // If there's nothing to update (no new file and no display name change), you could skip
+    // but this check is optional. For minimal changes, we'll just always proceed.
     const storedUser = localStorage.getItem("user");
     if (storedUser && storedUser !== "undefined" && storedUser.trim() !== "") {
       try {
         const parsed = JSON.parse(storedUser);
         const formData = new FormData();
         formData.append("user_id", parsed.id.toString());
-        formData.append("file", selectedFile);
-  
+        formData.append("displayname", displayName); // <-- Send displayName
+        if (selectedFile) {
+          formData.append("file", selectedFile);
+        }
+
         const res = await fetch("http://localhost:8000/user-management/upload-profile-picture", {
           method: "POST",
           body: formData
         });
         if (!res.ok) {
           const errorText = await res.text();
-          throw new Error("Failed to update profile picture: " + errorText);
+          throw new Error("Failed to update: " + errorText);
         }
         const data = await res.json();
         // data is the updated user object
-        parsed.profile_picture = data.profile_picture;  // <-- Store updated path
+        parsed.displayname = data.displayname;
+        parsed.profile_picture = data.profile_picture;
         localStorage.setItem("user", JSON.stringify(parsed));
-        setMessage("Profile picture updated.");
-        setProfilePicture(data.profile_picture);  // <-- Update state right away
+        setMessage("User info updated.");
+        setProfilePicture(data.profile_picture);
       } catch (error) {
-        console.error("Error updating profile picture", error);
-        setMessage("Error updating profile picture.");
+        console.error("Error updating user", error);
+        setMessage("Error updating user.");
       }
     }
   };
@@ -87,8 +90,8 @@ export default function UserManagement() {
           <label className="block">Display Name</label>
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
             className="input input-bordered w-full"
           />
         </div>
@@ -97,13 +100,21 @@ export default function UserManagement() {
           <div className="flex items-center gap-4">
             <div className="avatar">
               <div className="w-24 rounded">
-                <img src={profilePicture || "https://placeimg.com/192/192/people"} alt="Profile Picture" />
+                <img
+                  src={profilePicture || "https://placeimg.com/192/192/people"}
+                  alt="Profile Picture"
+                />
               </div>
             </div>
-            <input type="file" accept="image/*" onChange={handleProfilePictureChange} className="file-input file-input-bordered w-full max-w-xs" />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleProfilePictureChange}
+              className="file-input file-input-bordered w-full max-w-xs"
+            />
           </div>
         </div>
-        <button type="submit" className="btn btn-primary">Update Display Name</button>
+        <button type="submit" className="btn btn-primary">Update Info</button>
       </form>
       {message && <p className="mt-4">{message}</p>}
     </div>
