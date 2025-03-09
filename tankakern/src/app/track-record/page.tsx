@@ -49,6 +49,7 @@ export default function TrackRecordPage() {
     }
   };
 
+  // Memoized selected fund and related cashflows and deals
   const selectedFund = useMemo(() => funds[selectedFundIndex], [funds, selectedFundIndex]);
   const selectedCF = useMemo(() => {
     return selectedFund ? cashflows.filter((c: any) => c.fund_name === selectedFund.fund_name) : [];
@@ -56,6 +57,10 @@ export default function TrackRecordPage() {
   const selectedDeals = useMemo(() => {
     return selectedFund ? deals.filter((d: any) => d.fund_name === selectedFund.fund_name) : [];
   }, [selectedFund, deals]);
+
+  // Separate actual cashflows and projected cashflows
+  const actualCF = selectedCF;
+  const projCF = showProjection ? projectedCF : [];
 
   // Fetch projection when toggle is on and selectedFund changes
   useEffect(() => {
@@ -78,9 +83,7 @@ export default function TrackRecordPage() {
         };
         const res = await fetch("http://localhost:8000/track-record/project", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(bodyData),
         });
         const result = await res.json();
@@ -180,48 +183,57 @@ export default function TrackRecordPage() {
     { header: "Type", accessorKey: "type", enableSorting: true },
   ];
 
-  // Combine existing CF with projected CF if projection is enabled
-  let displayedCF = selectedCF;
-  if (showProjection && projectedCF.length > 0) {
-    displayedCF = [
-      ...selectedCF,
-      ...projectedCF.map((p: any) => ({
-        fund_name: selectedFund?.fund_name,
-        gp_name: selectedFund?.gp_name,
-        ...p,
-      })),
-    ];
-  }
-
-  // Prepare chart data for individual cash flows
+  // Prepare individual cash flow chart data with separate traces for actual and projected flows
   let plotData: any[] = [];
   let layout: any = {};
 
-  if (selectedFund && displayedCF.length > 0) {
-    const sortedCF = [...displayedCF].sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
-    const callData = sortedCF.filter((flow) => flow.type === "Call");
-    const distData = sortedCF.filter((flow) => flow.type === "Distribution");
+  if (selectedFund && (actualCF.length > 0 || projCF.length > 0)) {
+    const actualCalls = actualCF.filter((flow: any) => flow.type === "Call");
+    const actualDist = actualCF.filter((flow: any) => flow.type === "Distribution");
+    const projCalls = projCF.filter((flow: any) => flow.type === "Call");
+    const projDist = projCF.filter((flow: any) => flow.type === "Distribution");
 
-    plotData = [
-      {
-        x: callData.map((flow) => flow.date),
-        y: callData.map((flow) => flow.amount_millions),
+    plotData = [];
+    if (actualCalls.length > 0) {
+      plotData.push({
+        x: actualCalls.map((flow: any) => flow.date),
+        y: actualCalls.map((flow: any) => flow.amount_millions),
         type: "scatter",
         mode: "lines+markers",
-        name: "Calls",
+        name: "Actual Calls",
         marker: { color: daisyNightTheme.layout.colorway[0] },
-      },
-      {
-        x: distData.map((flow) => flow.date),
-        y: distData.map((flow) => flow.amount_millions),
+      });
+    }
+    if (actualDist.length > 0) {
+      plotData.push({
+        x: actualDist.map((flow: any) => flow.date),
+        y: actualDist.map((flow: any) => flow.amount_millions),
         type: "scatter",
         mode: "lines+markers",
-        name: "Distributions",
+        name: "Actual Distributions",
         marker: { color: daisyNightTheme.layout.colorway[1] },
-      },
-    ];
+      });
+    }
+    if (projCalls.length > 0) {
+      plotData.push({
+        x: projCalls.map((flow: any) => flow.date),
+        y: projCalls.map((flow: any) => flow.amount_millions),
+        type: "scatter",
+        mode: "lines+markers",
+        name: "Projected Calls",
+        marker: { color: "#e67e22" }, // custom color for projection
+      });
+    }
+    if (projDist.length > 0) {
+      plotData.push({
+        x: projDist.map((flow: any) => flow.date),
+        y: projDist.map((flow: any) => flow.amount_millions),
+        type: "scatter",
+        mode: "lines+markers",
+        name: "Projected Distributions",
+        marker: { color: "#3498db" }, // custom color for projection
+      });
+    }
 
     layout = {
       ...daisyNightTheme.layout,
@@ -239,53 +251,57 @@ export default function TrackRecordPage() {
     };
   }
 
-  // Prepare cumulative chart data
+  // Prepare cumulative chart data, similarly separating actual and projected flows
   let cumulativePlotData: any[] = [];
   let cumulativeLayout: any = {};
 
-  if (selectedFund && displayedCF.length > 0) {
-    const sortedCF = [...displayedCF].sort(
+  if (selectedFund && (actualCF.length > 0 || projCF.length > 0)) {
+    const combinedCF = [...actualCF, ...projCF];
+    const sortedCF = [...combinedCF].sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
     let cumVal = 0;
     const xVals: string[] = [];
     const yVals: number[] = [];
     const markerColors: string[] = [];
-    const callsLegendTrace = {
+    // For legend traces of projected flows, we will mark them with custom colors.
+    const actualLegend = {
       x: [] as string[],
       y: [] as number[],
       type: "scatter",
       mode: "markers",
-      name: "Calls",
-      marker: { color: daisyNightTheme.layout.colorway[0] },
+      name: "Actual",
+      marker: { color: "#7A863B" }, // using the theme's third color
       showlegend: true,
       hoverinfo: "none",
       visible: "legendonly",
     };
-    const distributionsLegendTrace = {
+    const projLegend = {
       x: [] as string[],
       y: [] as number[],
       type: "scatter",
       mode: "markers",
-      name: "Distributions",
-      marker: { color: daisyNightTheme.layout.colorway[1] },
+      name: "Projected",
+      marker: { color: "#e74c3c" }, // custom red for projection
       showlegend: true,
       hoverinfo: "none",
       visible: "legendonly",
     };
 
-    sortedCF.forEach((cf) => {
+    // We'll assign markers based on whether each point comes from actual or projection.
+    sortedCF.forEach((cf: any) => {
       xVals.push(cf.date);
       cumVal += cf.amount_millions;
       yVals.push(cumVal);
-      if (cf.type === "Call") {
-        markerColors.push(daisyNightTheme.layout.colorway[0]);
-        callsLegendTrace.x.push(cf.date);
-        callsLegendTrace.y.push(cumVal);
+      // Mark the point based on its origin: if it exists in projectedCF, use projected color.
+      if (projCF.some((p: any) => p.date === cf.date && p.amount_millions === cf.amount_millions)) {
+        markerColors.push("#e74c3c");
+        projLegend.x.push(cf.date);
+        projLegend.y.push(cumVal);
       } else {
-        markerColors.push(daisyNightTheme.layout.colorway[1]);
-        distributionsLegendTrace.x.push(cf.date);
-        distributionsLegendTrace.y.push(cumVal);
+        markerColors.push(daisyNightTheme.layout.colorway[2]);
+        actualLegend.x.push(cf.date);
+        actualLegend.y.push(cumVal);
       }
     });
 
@@ -299,7 +315,8 @@ export default function TrackRecordPage() {
       marker: { color: markerColors },
     };
 
-    cumulativePlotData = [mainCumulativeTrace, callsLegendTrace, distributionsLegendTrace];
+    cumulativePlotData = [mainCumulativeTrace, actualLegend, projLegend];
+
     cumulativeLayout = {
       ...daisyNightTheme.layout,
       title: `💰 Cumulative Cash Flow for ${selectedFund.fund_name}`,
@@ -321,19 +338,48 @@ export default function TrackRecordPage() {
       <h2 className="text-2xl font-bold mb-4">GP Track Record Generator</h2>
       <div className="flex flex-col md:flex-row gap-4 mb-4">
         <div className="form-control">
-          <label className="label"><span className="label-text">GP Name</span></label>
-          <input type="text" value={gpName} onChange={(e) => setGpName(e.target.value)} className="input input-bordered" placeholder="Enter GP Name" />
+          <label className="label">
+            <span className="label-text">GP Name</span>
+          </label>
+          <input
+            type="text"
+            value={gpName}
+            onChange={(e) => setGpName(e.target.value)}
+            className="input input-bordered"
+            placeholder="Enter GP Name"
+          />
         </div>
         <div className="form-control">
-          <label className="label"><span className="label-text">Number of Funds</span></label>
-          <input type="number" value={numFunds} onChange={(e) => setNumFunds(Number(e.target.value))} className="input input-bordered" min={1} max={15} />
+          <label className="label">
+            <span className="label-text">Number of Funds</span>
+          </label>
+          <input
+            type="number"
+            value={numFunds}
+            onChange={(e) => setNumFunds(Number(e.target.value))}
+            className="input input-bordered"
+            min={1}
+            max={15}
+          />
         </div>
         <div className="form-control">
-          <label className="label"><span className="label-text">Deals per Fund</span></label>
-          <input type="number" value={numDeals} onChange={(e) => setNumDeals(Number(e.target.value))} className="input input-bordered" min={1} max={100} />
+          <label className="label">
+            <span className="label-text">Deals per Fund</span>
+          </label>
+          <input
+            type="number"
+            value={numDeals}
+            onChange={(e) => setNumDeals(Number(e.target.value))}
+            className="input input-bordered"
+            min={1}
+            max={100}
+          />
         </div>
       </div>
-      <button className={`btn btn-primary ${loading ? "loading" : ""}`} onClick={generateData}>
+      <button
+        className={`btn btn-primary ${loading ? "loading" : ""}`}
+        onClick={generateData}
+      >
         {loading ? "Generating..." : "Generate Fund Data"}
       </button>
       {funds.length > 0 && (
@@ -347,35 +393,55 @@ export default function TrackRecordPage() {
           <h2 className="text-xl font-bold mb-2">Fund Details</h2>
           <div className="tabs tabs-boxed mb-4">
             {funds.map((fund, index) => (
-              <a key={index} className={`tab ${selectedFundIndex === index ? "tab-active" : ""}`} onClick={() => setSelectedFundIndex(index)}>
+              <a
+                key={index}
+                className={`tab ${selectedFundIndex === index ? "tab-active" : ""}`}
+                onClick={() => setSelectedFundIndex(index)}
+              >
                 {fund.fund_name}
               </a>
             ))}
           </div>
           {selectedFund && (
             <div>
+              {/* Projection toggle */}
               <div className="form-control flex-row items-center mb-4 gap-2">
                 <label className="cursor-pointer label">
                   <span className="label-text">Project Future Cash Flows?</span>
                 </label>
-                <input type="checkbox" className="toggle toggle-primary" checked={showProjection} onChange={() => setShowProjection((prev) => !prev)} />
+                <input
+                  type="checkbox"
+                  className="toggle toggle-primary"
+                  checked={showProjection}
+                  onChange={() => setShowProjection((prev) => !prev)}
+                />
               </div>
               <h3 className="text-lg font-semibold mb-2">Deals for {selectedFund.fund_name}</h3>
               <DataTable columns={dealColumns} data={selectedDeals} enableSorting />
-              {displayedCF.length > 0 && (
+              {(actualCF.length > 0 || projCF.length > 0) && (
                 <div className="mt-6 flex flex-col md:flex-row gap-4">
                   <div className="w-full md:w-1/2">
                     <h3 className="text-lg font-bold mb-2">💸 Cash Flow Chart</h3>
-                    <Plot data={plotData} layout={layout} style={{ width: "100%", height: "500px" }} useResizeHandler={true} />
+                    <Plot
+                      data={plotData}
+                      layout={layout}
+                      style={{ width: "100%", height: "500px" }}
+                      useResizeHandler={true}
+                    />
                   </div>
                   <div className="w-full md:w-1/2">
                     <h3 className="text-lg font-bold mb-2">💰 Cumulative Cash Flow Chart</h3>
-                    <Plot data={cumulativePlotData} layout={cumulativeLayout} style={{ width: "100%", height: "500px" }} useResizeHandler={true} />
+                    <Plot
+                      data={cumulativePlotData}
+                      layout={cumulativeLayout}
+                      style={{ width: "100%", height: "500px" }}
+                      useResizeHandler={true}
+                    />
                   </div>
                 </div>
               )}
               <h3 className="text-lg font-semibold mt-6 mb-2">Cash Flows for {selectedFund.fund_name}</h3>
-              <DataTable columns={cfColumns} data={displayedCF} enableSorting />
+              <DataTable columns={cfColumns} data={[...actualCF, ...projCF.map((p: any) => ({ fund_name: selectedFund.fund_name, gp_name: selectedFund.gp_name, ...p }))]} enableSorting />
             </div>
           )}
         </div>
