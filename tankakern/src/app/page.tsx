@@ -47,13 +47,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {user && (
-        <div className="fixed bottom-0 left-0 p-4">
-          <p className="text-sm">
-            Logged in as: <span className="font-bold">{user.username}</span>
-          </p>
-        </div>
-      )}
     </>
   );
 }

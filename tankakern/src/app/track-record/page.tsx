@@ -2,6 +2,8 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { daisyNightTheme } from "../../theme/plotlyTheme";
+import { DataTable } from "../../components/DataTable";
+import { ColumnDef } from "@tanstack/react-table";
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
@@ -54,7 +56,165 @@ export default function TrackRecordPage() {
     : [];
 
   // -----------------------------------
-  // Chart 1: Individual Cash Flows
+  // Define columns for each table
+  // -----------------------------------
+  const fundColumns: ColumnDef<any>[] = [
+    {
+      header: "Fund Name",
+      accessorKey: "fund_name",
+    },
+    {
+      header: "GP Name",
+      accessorKey: "gp_name",
+    },
+    {
+      header: "Vintage Year",
+      accessorKey: "vintage_year",
+    },
+    {
+      header: "Net IRR",
+      accessorKey: "net_irr",
+      cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+    {
+      header: "Net DPI",
+      accessorKey: "net_dpi",
+      cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+    {
+      header: "Net TVPI",
+      accessorKey: "net_tvpi",
+      cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+    {
+      header: "Stage",
+      accessorKey: "stage",
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+    {
+      header: "Geo",
+      accessorKey: "geo",
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+  ];
+
+  const dealColumns: ColumnDef<any>[] = [
+    {
+      header: "Fund Name",
+      accessorKey: "fund_name",
+      enableColumnFilter: true,
+    },
+    {
+      header: "GP Name",
+      accessorKey: "gp_name",
+      enableColumnFilter: true,
+    },
+    {
+      header: "Company",
+      accessorKey: "company_name",
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+    {
+      header: "Stage",
+      accessorKey: "stage",
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+    {
+      header: "Geo",
+      accessorKey: "geo",
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+    {
+      header: "Total Value",
+      accessorKey: "total_value",
+      cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+    {
+      header: "Total Cost",
+      accessorKey: "total_cost",
+      cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+    {
+      header: "Realized Value",
+      accessorKey: "realized_value",
+      cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+    {
+      header: "Realized Cost",
+      accessorKey: "realized_cost",
+      cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+    {
+      header: "TV/TC",
+      accessorKey: "tv_tc",
+      cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+    {
+      header: "Realized?",
+      accessorKey: "realized",
+      cell: (info) => (info.getValue() ? "Yes" : "No"),
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+  ];
+
+  const cfColumns: ColumnDef<any>[] = [
+    {
+      header: "Fund Name",
+      accessorKey: "fund_name",
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+    {
+      header: "GP Name",
+      accessorKey: "gp_name",
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+    {
+      header: "Date",
+      accessorKey: "date",
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+    {
+      header: "Amount (Millions)",
+      accessorKey: "amount_millions",
+      cell: (info) => (info.getValue() ? info.getValue().toFixed(2) : null),
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+    {
+      header: "Type",
+      accessorKey: "type",
+      enableColumnFilter: true,
+      enableSorting: true,
+    },
+  ];
+
+  // -----------------------------------
+  // Chart Data
   // -----------------------------------
   let plotData: any[] = [];
   let layout: any = {};
@@ -104,9 +264,7 @@ export default function TrackRecordPage() {
     };
   }
 
-  // -----------------------------------
-  // Chart 2: Cumulative Cash Flow (single line, color-coded markers)
-  // -----------------------------------
+  // Cumulative Chart
   let cumulativePlotData: any[] = [];
   let cumulativeLayout: any = {};
 
@@ -115,17 +273,14 @@ export default function TrackRecordPage() {
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
 
-    // Compute cumulative
     let cumVal = 0;
     const xVals: string[] = [];
     const yVals: number[] = [];
-    // We'll keep track of each point's color based on Call/Distribution
     const markerColors: string[] = [];
 
-    // Dummy traces to include in legend for color coding
     const callsLegendTrace = {
-      x: [],
-      y: [],
+      x: [] as string[],
+      y: [] as number[],
       type: "scatter",
       mode: "markers",
       name: "Calls",
@@ -135,8 +290,8 @@ export default function TrackRecordPage() {
       visible: "legendonly",
     };
     const distributionsLegendTrace = {
-      x: [],
-      y: [],
+      x: [] as string[],
+      y: [] as number[],
       type: "scatter",
       mode: "markers",
       name: "Distributions",
@@ -150,6 +305,7 @@ export default function TrackRecordPage() {
       xVals.push(cf.date);
       cumVal += cf.amount_millions;
       yVals.push(cumVal);
+
       if (cf.type === "Call") {
         markerColors.push(daisyNightTheme.layout.colorway[0]);
         callsLegendTrace.x.push(cf.date);
@@ -246,36 +402,13 @@ export default function TrackRecordPage() {
       {funds.length > 0 && (
         <div className="mt-6">
           <h2 className="text-xl font-bold mb-2">Funds Table</h2>
-          <div className="overflow-x-auto">
-            <table className="table table-zebra w-full">
-              <thead>
-                <tr>
-                  <th>Fund Name</th>
-                  <th>GP Name</th>
-                  <th>Vintage Year</th>
-                  <th>Net IRR</th>
-                  <th>Net DPI</th>
-                  <th>Net TVPI</th>
-                  <th>Stage</th>
-                  <th>Geo</th>
-                </tr>
-              </thead>
-              <tbody>
-                {funds.map((fund, idx) => (
-                  <tr key={idx}>
-                    <td>{fund.fund_name}</td>
-                    <td>{fund.gp_name}</td>
-                    <td>{fund.vintage_year}</td>
-                    <td>{fund.net_irr.toFixed(2)}</td>
-                    <td>{fund.net_dpi.toFixed(2)}</td>
-                    <td>{fund.net_tvpi.toFixed(2)}</td>
-                    <td>{fund.stage}</td>
-                    <td>{fund.geo}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <DataTable
+            columns={fundColumns}
+            data={funds}
+            enableSorting
+            enableGlobalFilter
+            enableColumnFilters
+          />
         </div>
       )}
 
@@ -299,42 +432,13 @@ export default function TrackRecordPage() {
             <div>
               {/* Deals Table */}
               <h3 className="text-lg font-semibold mb-2">Deals for {selectedFund.fund_name}</h3>
-              <div className="overflow-x-auto">
-                <table className="table table-zebra w-full">
-                  <thead>
-                    <tr>
-                      <th>Fund Name</th>
-                      <th>GP Name</th>
-                      <th>Company</th>
-                      <th>Stage</th>
-                      <th>Geo</th>
-                      <th>Total Value</th>
-                      <th>Total Cost</th>
-                      <th>Realized Value</th>
-                      <th>Realized Cost</th>
-                      <th>TV/TC</th>
-                      <th>Realized?</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {selectedDeals.map((deal, dIdx) => (
-                      <tr key={dIdx}>
-                        <td>{deal.fund_name}</td>
-                        <td>{deal.gp_name}</td>
-                        <td>{deal.company_name}</td>
-                        <td>{deal.stage}</td>
-                        <td>{deal.geo}</td>
-                        <td>{deal.total_value.toFixed(2)}</td>
-                        <td>{deal.total_cost.toFixed(2)}</td>
-                        <td>{deal.realized_value.toFixed(2)}</td>
-                        <td>{deal.realized_cost.toFixed(2)}</td>
-                        <td>{deal.tv_tc.toFixed(2)}</td>
-                        <td>{deal.realized ? "Yes" : "No"}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <DataTable
+                columns={dealColumns}
+                data={selectedDeals}
+                enableSorting
+                enableGlobalFilter
+                enableColumnFilters
+              />
 
               {/* Charts: Cash Flow (left) and Cumulative Cash Flow (right) with Titles */}
               {selectedCF.length > 0 && (
@@ -362,30 +466,13 @@ export default function TrackRecordPage() {
 
               {/* Cash Flow Table */}
               <h3 className="text-lg font-semibold mt-6 mb-2">Cash Flows for {selectedFund.fund_name}</h3>
-              <div className="overflow-x-auto">
-                <table className="table table-zebra w-full">
-                  <thead>
-                    <tr>
-                      <th>Fund Name</th>
-                      <th>GP Name</th>
-                      <th>Date</th>
-                      <th>Amount (Millions)</th>
-                      <th>Type</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {selectedCF.map((flow, fIdx) => (
-                      <tr key={fIdx}>
-                        <td>{flow.fund_name}</td>
-                        <td>{flow.gp_name}</td>
-                        <td>{flow.date}</td>
-                        <td>{flow.amount_millions.toFixed(2)}</td>
-                        <td>{flow.type}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <DataTable
+                columns={cfColumns}
+                data={selectedCF}
+                enableSorting
+                enableGlobalFilter
+                enableColumnFilters
+              />
             </div>
           )}
         </div>

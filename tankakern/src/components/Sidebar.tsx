@@ -171,7 +171,7 @@ export default function Sidebar() {
             </div>
           </div>
           <div>
-            <Link href="/user-management" className="text-sm font-bold text-blue-500 underline">
+            <Link href="/user-management" className="text-sm font-bold underline text-pink-500 hover:text-pink-600">
               {user.displayname || user.username}
             </Link>
           </div>
@@ -181,9 +181,9 @@ export default function Sidebar() {
                 localStorage.removeItem("user");
                 window.location.href = "/login";
               }}
-              className="btn btn-ghost"
+              className="btn-primary"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="pink" viewBox="0 0 24 24">
                 <path d="M7 2h10a1 1 0 011 1v18a1 1 0 01-1 1H7a1 1 0 01-1-1V3a1 1 0 011-1zm3 12a2 2 0 104 0 2 2 0 00-4 0z" />
               </svg>
             </button>
