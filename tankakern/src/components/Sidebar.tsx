@@ -28,7 +28,7 @@ export default function Sidebar() {
       }
     };
     updateUser();
-    const interval = setInterval(updateUser, 1000);
+    const interval = setInterval(updateUser, 30000);
     return () => clearInterval(interval);
   }, []);
 
