@@ -67,29 +67,53 @@ export default function PerformancePage() {
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-4">Performance</h1>
       <div className="flex flex-col md:flex-row items-center mb-4 gap-4">
-        <input
-          type="number"
-          value={steps}
-          onChange={(e) => setSteps(Number(e.target.value))}
-          className="input input-bordered w-32"
-          placeholder="Steps"
-        />
-        <input
-          type="number"
-          value={startingValue}
-          onChange={(e) => setStartingValue(Number(e.target.value))}
-          className="input input-bordered w-32"
-          placeholder="Starting Value"
-        />
-        <input
-          type="number"
-          value={numProcesses}
-          onChange={(e) => setNumProcesses(Number(e.target.value))}
-          className="input input-bordered w-32"
-          placeholder="Processes"
-          min={1}
-          max={10}
-        />
+        <div className="flex flex-col">
+          <div className="flex items-center gap-1">
+            <label className="font-bold">Steps</label>
+            <div className="tooltip tooltip-top" data-tip="Total number of steps to simulate">
+              <span className="cursor-pointer text-secondary">?</span>
+            </div>
+          </div>
+          <input
+            type="number"
+            value={steps}
+            onChange={(e) => setSteps(Number(e.target.value))}
+            className="input input-bordered w-32"
+            placeholder="Steps"
+          />
+        </div>
+        <div className="flex flex-col">
+          <div className="flex items-center gap-1">
+            <label className="font-bold">Start</label>
+            <div className="tooltip tooltip-top" data-tip="Initial value for the simulation">
+              <span className="cursor-pointer text-secondary">?</span>
+            </div>
+          </div>
+          <input
+            type="number"
+            value={startingValue}
+            onChange={(e) => setStartingValue(Number(e.target.value))}
+            className="input input-bordered w-32"
+            placeholder="Starting Value"
+          />
+        </div>
+        <div className="flex flex-col">
+          <div className="flex items-center gap-1">
+            <label className="font-bold">Proc</label>
+            <div className="tooltip tooltip-top" data-tip="Number of processes to use">
+              <span className="cursor-pointer text-secondary">?</span>
+            </div>
+          </div>
+          <input
+            type="number"
+            value={numProcesses}
+            onChange={(e) => setNumProcesses(Number(e.target.value))}
+            className="input input-bordered w-32"
+            placeholder="Processes"
+            min={1}
+            max={10}
+          />
+        </div>
         <button className="btn btn-primary" onClick={fetchData}>
           Refresh Plot
         </button>
