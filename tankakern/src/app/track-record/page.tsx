@@ -122,9 +122,7 @@ export default function TrackRecordPage() {
     // We'll keep track of each point's color based on Call/Distribution
     const markerColors: string[] = [];
 
-    // We'll add "dummy" traces to show distinct legend entries for Calls and Distributions
-    // while still preserving a single line for the total.
-    // We won't display lines for these dummy traces, only markers for the legend.
+    // Dummy traces to include in legend for color coding
     const callsLegendTrace = {
       x: [],
       y: [],
@@ -134,7 +132,7 @@ export default function TrackRecordPage() {
       marker: { color: daisyNightTheme.layout.colorway[0] },
       showlegend: true,
       hoverinfo: "none",
-      visible: "legendonly", // We'll keep them in legend but hide from chart by default
+      visible: "legendonly",
     };
     const distributionsLegendTrace = {
       x: [],
@@ -148,15 +146,12 @@ export default function TrackRecordPage() {
       visible: "legendonly",
     };
 
-    // Single cumulative line with multi-colored markers
     sortedCF.forEach((cf) => {
       xVals.push(cf.date);
       cumVal += cf.amount_millions;
       yVals.push(cumVal);
-      // Decide which color for the marker
       if (cf.type === "Call") {
         markerColors.push(daisyNightTheme.layout.colorway[0]);
-        // For legend
         callsLegendTrace.x.push(cf.date);
         callsLegendTrace.y.push(cumVal);
       } else {
@@ -180,14 +175,14 @@ export default function TrackRecordPage() {
 
     cumulativeLayout = {
       ...daisyNightTheme.layout,
-      title: `💸 Cumulative Cash Flow for ${selectedFund?.fund_name || ""}`,
+      title: `💰 Cumulative Cash Flow for ${selectedFund?.fund_name || ""}`,
       xaxis: { ...daisyNightTheme.layout.xaxis, title: "Date" },
       yaxis: { ...daisyNightTheme.layout.yaxis, title: "Cumulative Amount (Millions)" },
       autosize: true,
       legend: {
         orientation: "h",
         yanchor: "top",
-        y: -0.2, // place the legend just below the chart
+        y: -0.2,
         xanchor: "center",
         x: 0.5,
       },
@@ -341,22 +336,24 @@ export default function TrackRecordPage() {
                 </table>
               </div>
 
-              {/* Charts: Cash Flow (left) and Cumulative Cash Flow (right) */}
+              {/* Charts: Cash Flow (left) and Cumulative Cash Flow (right) with Titles */}
               {selectedCF.length > 0 && (
                 <div className="mt-6 flex flex-col md:flex-row gap-4">
                   <div className="w-full md:w-1/2">
+                    <h3 className="text-lg font-bold mb-2">💸 Cash Flow Chart</h3>
                     <Plot
                       data={plotData}
                       layout={layout}
-                      style={{ width: "100%", height: "100%" }}
+                      style={{ width: "100%", height: "500px" }}
                       useResizeHandler={true}
                     />
                   </div>
                   <div className="w-full md:w-1/2">
+                    <h3 className="text-lg font-bold mb-2">💰 Cumulative Cash Flow Chart</h3>
                     <Plot
                       data={cumulativePlotData}
                       layout={cumulativeLayout}
-                      style={{ width: "100%", height: "100%" }}
+                      style={{ width: "100%", height: "500px" }}
                       useResizeHandler={true}
                     />
                   </div>
