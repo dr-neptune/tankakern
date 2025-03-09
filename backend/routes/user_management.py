@@ -24,7 +24,8 @@ async def upload_profile_picture(user_id: int = Form(...), file: UploadFile = Fi
          f.write(content)
     session.add(user)
     session.commit()
-    return {"filename": file.filename, "user_id": user_id}
+    session.refresh(user)
+    return user  # <-- Return the full user object so the frontend can get profile_picture
 
 @router.get("/{user_id}")
 async def get_user(user_id: int, session: Session = Depends(get_session)):
@@ -32,4 +33,3 @@ async def get_user(user_id: int, session: Session = Depends(get_session)):
     if not user:
         raise HTTPException(status_code=404, detail="User not found.")
     return user
-    

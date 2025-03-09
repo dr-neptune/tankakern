@@ -67,10 +67,11 @@ export default function UserManagement() {
           throw new Error("Failed to update profile picture: " + errorText);
         }
         const data = await res.json();
-        // Optionally update user's profilePicture in local storage based on response
-        parsed.profilePicture = data.filename;
+        // data is the updated user object
+        parsed.profile_picture = data.profile_picture;  // <-- Store updated path
         localStorage.setItem("user", JSON.stringify(parsed));
         setMessage("Profile picture updated.");
+        setProfilePicture(data.profile_picture);  // <-- Update state right away
       } catch (error) {
         console.error("Error updating profile picture", error);
         setMessage("Error updating profile picture.");

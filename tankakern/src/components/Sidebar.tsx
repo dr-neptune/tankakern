@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 
 export default function Sidebar() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any>(null);
   useEffect(() => {
     const updateUser = async () => {
       const storedUser = localStorage.getItem("user");
@@ -29,6 +29,7 @@ export default function Sidebar() {
     const interval = setInterval(updateUser, 1000);
     return () => clearInterval(interval);
   }, []);
+
   return (
     <aside className="menu w-64 p-4 bg-base-100 text-base-content flex flex-col h-screen">
       <div className="mb-4">
@@ -155,7 +156,16 @@ export default function Sidebar() {
         <div className="flex justify-between items-center mt-auto p-2 border-t border-base-300">
           <div className="avatar">
             <div className="w-12 rounded">
-              <img src={user.profilePicture ? (user.profilePicture.startsWith("http") ? user.profilePicture : `http://localhost:8000/${user.profilePicture}`) : "/default-avatar.png"} alt="Profile picture" />
+              <img
+                src={
+                  user.profile_picture
+                    ? user.profile_picture.startsWith("http")
+                      ? user.profile_picture
+                      : `http://localhost:8000/${user.profile_picture}`
+                    : "/default-avatar.png"
+                }
+                alt="Profile picture"
+              />
             </div>
           </div>
           <div>
