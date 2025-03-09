@@ -4,14 +4,14 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (!storedUser || storedUser === "undefined") {
       router.replace("/login");
     } else {
-      if (storedUser.trim()[0] !== '{') {
+      if (storedUser.trim()[0] !== "{") {
         console.error("Invalid user data in localStorage", storedUser);
         localStorage.removeItem("user");
         router.replace("/login");
