@@ -2,22 +2,21 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles  # <-- Added
 from datetime import datetime, timedelta
 import random
+
 from routes.data_extraction import router as data_extraction_router
 from routes.performance import router as performance_router
 from routes.extractive_qa import router as extractive_qa_router
 from routes.extract_tables import router as extract_tables_router
 from routes.auth import router as auth_router
 from routes.user_management import router as user_management_router
-
-# >>> NEW IMPORT
 from routes.track_record import router as track_record_router
-# <<< NEW IMPORT
 
 app = FastAPI()
 
 # Mount the uploads directory to serve static files
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")  # <-- Added
 
+# Include routers under their respective prefixes
 app.include_router(data_extraction_router, prefix="/data-extraction")
 app.include_router(performance_router, prefix="/performance")
 app.include_router(extractive_qa_router, prefix="/data-extraction/process")
