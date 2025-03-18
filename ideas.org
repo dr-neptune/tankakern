@@ -1,3 +1,46 @@
+* <2025-03-18 Tue>
+
+Let's start building out a simple version of the relationship segment
+
+Hey GPT! I have an app that uses react on the frontend and python on
+the backend. The app aims to provide a way to explore analytics on
+private equity data.
+
+I would like to flesh out a new section of the app that I'm
+tentatively calling Relationships. Here is my idea at a very high
+level:
+
+Sometimes groups of investors leverage their social networks to make
+deals. When we look at documents related to large deals, it often has
+information on the deal leads and people who are leading that deal. It
+might include things like how long they've been at a firm (as of a
+given date), where they went to school, where they previously worked,
+and other elements.
+
+Given enough deal documents over time, we should be able to link
+certain people with deals, the given deals performance, and also with
+background information about the person. I'm thinking that we can make
+a graph with this information.
+
+It would be exciting if we could create a dataset that we could
+augment with graph theoretic measures. Then we could make models that
+essentially use graph information to predict the outcome of a deal
+including that person.
+
+Before we begin, does this seem like a reasonable project to
+undertake? What are the upsides and downsides? Am I missing anything
+that you think would be important?
+
+idea:
+
+spin up a neo4j database
+fill it with fake information
+add functionality for adding information to the database
+add a basic graph feature engineering + tabular model output to the
+relationships page
+
+
+
 * <2025-03-09 Sun>
 
 added a bunch to GP track record

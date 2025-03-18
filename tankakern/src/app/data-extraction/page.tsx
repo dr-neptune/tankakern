@@ -123,7 +123,7 @@ export default function DataExtractionPage() {
             rows={4}
             value={description}
             onChange={handleDescriptionChange}
-            placeholder="e.g., What is the impact on revenue?"
+            placeholder="e.g., What is the total revenue?"
             className="textarea textarea-bordered w-full"
           />
         </div>
