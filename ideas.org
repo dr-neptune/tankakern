@@ -1,3 +1,11 @@
+* <2025-03-20 Thu>
+
+Added a dynamic node table selector for the graph segment
+
+Next step is probably to find a way to calculate summary statistics or
+make some sort of graph model on the dataset
+
+
 * <2025-03-18 Tue>
 
 Let's start building out a simple version of the relationship segment

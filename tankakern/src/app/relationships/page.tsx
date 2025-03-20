@@ -9,6 +9,7 @@ const ForceGraph2D = dynamic(
 );
 
 export default function RelationshipsPage() {
+  // Existing person data fetch (from /relationships/people)
   const [people, setPeople] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,12 +23,14 @@ export default function RelationshipsPage() {
   // State to track if AFRAME is loaded
   const [aframeLoaded, setAframeLoaded] = useState(false);
 
+  // For dynamic table viewing of different node labels
+  const [selectedLabel, setSelectedLabel] = useState<string>("");
+
   // Load AFRAME on client-side and ensure it's available globally
   useEffect(() => {
     async function loadAframe() {
       try {
         const aframeModule = await import("aframe");
-        // Ensure AFRAME is available on the window object
         if (!window.AFRAME) {
           window.AFRAME = aframeModule;
         }
@@ -40,7 +43,7 @@ export default function RelationshipsPage() {
     loadAframe();
   }, []);
 
-  // Fetch people data
+  // Fetch a list of Person nodes separately
   useEffect(() => {
     async function fetchPeople() {
       try {
@@ -71,13 +74,15 @@ export default function RelationshipsPage() {
           throw new Error(`Graph fetch error: ${res.status} ${res.statusText}`);
         }
         const data = await res.json();
-        // Transform nodes/relationships into ForceGraph format:
-        // { nodes: [{ id: ... }, ...], links: [{ source: ..., target: ... }, ...] }
+
+        // Transform nodes/relationships into ForceGraph format
         const transformedNodes = data.nodes.map((n: any) => ({
+          // 'label' is a simplified single-label approach:
           id: n.id,
           label: n.labels && n.labels.length > 0 ? n.labels[0] : "Node",
-          ...n.properties,
+          ...n.properties, // flatten node properties at the top level
         }));
+
         const transformedLinks = data.relationships.map((r: any) => ({
           id: r.id,
           source: r.startNode,
@@ -85,6 +90,7 @@ export default function RelationshipsPage() {
           label: r.type,
           ...r.properties,
         }));
+
         setGraphData({ nodes: transformedNodes, links: transformedLinks });
       } catch (err: any) {
         console.error("Error fetching full graph from Neo4j:", err);
@@ -93,6 +99,32 @@ export default function RelationshipsPage() {
     }
     fetchGraph();
   }, []);
+
+  // Collect unique labels from the nodes (for dynamic table selection)
+  const uniqueLabels = Array.from(new Set(graphData.nodes.map((n) => n.label))).sort();
+
+  // If no label selected yet, pick the first from the list (if any)
+  useEffect(() => {
+    if (!selectedLabel && uniqueLabels.length > 0) {
+      setSelectedLabel(uniqueLabels[0]);
+    }
+  }, [uniqueLabels, selectedLabel]);
+
+  // Filter nodes by selected label
+  const nodesForSelectedLabel = graphData.nodes.filter(
+    (n) => n.label === selectedLabel
+  );
+
+  // Build a set of all property keys across these nodes (excluding id & label)
+  const propertyKeys = new Set<string>();
+  nodesForSelectedLabel.forEach((node) => {
+    Object.keys(node).forEach((k) => {
+      if (k !== "id" && k !== "label") {
+        propertyKeys.add(k);
+      }
+    });
+  });
+  const propertyKeysArray = Array.from(propertyKeys).sort();
 
   return (
     <div className="w-full bg-base-100">
@@ -122,34 +154,65 @@ export default function RelationshipsPage() {
         )}
 
         {viewMode === "table" && (
-          <div>
-            <h2 className="text-xl font-semibold mb-2">Person Nodes</h2>
-            {people.length === 0 && !error && (
-              <p className="text-sm">No people found or still loading...</p>
-            )}
-            {people.length > 0 && (
-              <div className="overflow-x-auto">
-                <table className="table w-full table-zebra">
-                  <thead>
-                    <tr>
-                      <th>Person ID</th>
-                      <th>Full Name</th>
-                      <th>Primary Title</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {people.map((p) => (
-                      <tr key={p.personId}>
-                        <td>{p.personId}</td>
-                        <td>{p.fullName}</td>
-                        <td>{p.primaryTitle}</td>
-                      </tr>
+          <>
+            {/* New dynamic table for any label from the full graph */}
+            <div>
+              <h2 className="text-xl font-semibold mb-2">Dynamic Node Table</h2>
+
+              {/* Label selection dropdown */}
+              {uniqueLabels.length > 0 && (
+                <div className="form-control w-full max-w-xs mb-4">
+                  <label className="label">
+                    <span className="label-text">Select Node Label:</span>
+                  </label>
+                  <select
+                    className="select select-bordered"
+                    value={selectedLabel}
+                    onChange={(e) => setSelectedLabel(e.target.value)}
+                  >
+                    {uniqueLabels.map((lbl) => (
+                      <option key={lbl} value={lbl}>
+                        {lbl}
+                      </option>
                     ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
+                  </select>
+                </div>
+              )}
+
+              {nodesForSelectedLabel.length === 0 && (
+                <p className="text-sm">No nodes found for the selected label.</p>
+              )}
+              {nodesForSelectedLabel.length > 0 && (
+                <div className="overflow-x-auto">
+                  <table className="table w-full table-zebra">
+                    <thead>
+                      <tr>
+                        {/* Always show 'id' and 'label', plus each property */}
+                        <th>ID</th>
+                        <th>Label</th>
+                        {propertyKeysArray.map((key) => (
+                          <th key={key}>{key}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {nodesForSelectedLabel.map((node, idx) => (
+                        <tr key={`${node.id}-${idx}`}>
+                          <td>{node.id}</td>
+                          <td>{node.label}</td>
+                          {propertyKeysArray.map((key) => (
+                            <td key={`${node.id}-${key}`}>
+                              {node[key] !== undefined ? String(node[key]) : ""}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </>
         )}
 
         {viewMode === "graph" && (
