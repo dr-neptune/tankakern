@@ -10,10 +10,6 @@ make some sort of graph model on the dataset
 
 Let's start building out a simple version of the relationship segment
 
-Hey GPT! I have an app that uses react on the frontend and python on
-the backend. The app aims to provide a way to explore analytics on
-private equity data.
-
 I would like to flesh out a new section of the app that I'm
 tentatively calling Relationships. Here is my idea at a very high
 level:
